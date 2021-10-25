@@ -1,0 +1,132 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "5aa5526fabce3fcbbcf6de3df89e807c",
+    "entities": [
+      {
+        "tableName": "SavedStatsConfiguration",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`waga` REAL NOT NULL, `biust` REAL NOT NULL, `talia` REAL NOT NULL, `brzuch` REAL NOT NULL, `biodra` REAL NOT NULL, `udo` REAL NOT NULL, `lydka` REAL NOT NULL, `ramie` REAL NOT NULL, `userOwnerId` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "waga",
+            "columnName": "waga",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "biust",
+            "columnName": "biust",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "talia",
+            "columnName": "talia",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brzuch",
+            "columnName": "brzuch",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "biodra",
+            "columnName": "biodra",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "udo",
+            "columnName": "udo",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lydka",
+            "columnName": "lydka",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ramie",
+            "columnName": "ramie",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userOwnerId",
+            "columnName": "userOwnerId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "ApplicationUser",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `height` REAL NOT NULL, `weight` REAL NOT NULL, `sex` INTEGER NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "height",
+            "columnName": "height",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weight",
+            "columnName": "weight",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sex",
+            "columnName": "sex",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5aa5526fabce3fcbbcf6de3df89e807c')"
+    ]
+  }
+}

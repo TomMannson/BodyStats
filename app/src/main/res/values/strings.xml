@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BodyStats</string>
+    <string name="lbl_insert_params">Wprowadź parametry pomiarów</string>
+</resources>

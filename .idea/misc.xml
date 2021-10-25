@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/compose-model-1634829027267.xml" value="0.3311470158183772" />
+        <entry key="../../../../layout/compose-model-1634829757891.xml" value="10.0" />
+        <entry key="../../../../layout/compose-model-1634829791683.xml" value="0.41560902298696417" />
+        <entry key="../../../../layout/compose-model-1634836683109.xml" value="0.375" />
+        <entry key="../../../../layout/compose-model-1634840585161.xml" value="0.375" />
+        <entry key="../../../../layout/compose-model-1634842336581.xml" value="0.19763513513513514" />
+        <entry key="../../../../layout/compose-model-1634842467547.xml" value="0.19763513513513514" />
+        <entry key="../../../../layout/compose-model-1634844297657.xml" value="0.375" />
+        <entry key="../../../../layout/compose-model-1634884484293.xml" value="0.19552364864864866" />
+        <entry key="../../../../layout/compose-model-1634889467189.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1634899402499.xml" value="0.1" />
+        <entry key="../../../../layout/compose-model-1634899691469.xml" value="0.19298986486486486" />
+        <entry key="../../../../layout/compose-model-1634899766728.xml" value="0.3296296296296296" />
+        <entry key="app/src/main/res/layout/activity_configure.xml" value="0.2572463768115942" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/barier_test.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/include_configure_title.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/include_required_params.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/layout_saved_stats_item.xml" value="0.11875" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8 (2)" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.5" />
+      </ProjectState>
+    </option>
+  </component>
+</project>
