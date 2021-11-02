@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.home.sections
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -14,10 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tommannson.bodystats.R
+import com.tommannson.bodystats.feature.home.WeightInfo
 
 @Composable
-fun UserWeightInfo() {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp), backgroundColor = Color.Blue) {
+fun UserWeightInfo(weightInfo: WeightInfo, incrementWeight: () -> Unit, decrementWeight: () -> Unit, ) {
+    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp), backgroundColor = MaterialTheme.colors.primary) {
         Column(
             modifier = Modifier.padding(32.dp),
 
@@ -31,27 +33,26 @@ fun UserWeightInfo() {
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                "Cel: 65.0 kg",
+                "Cel: ${weightInfo.targetWeight} kg",
                 style = MaterialTheme.typography.body2,
                 color = Color.White,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Box(modifier = Modifier.padding(horizontal = 16.dp)){
-                WeightAssigner()
+                WeightAssigner(weightInfo.weight, incrementWeight, decrementWeight)
             }
-
         }
     }
 }
 
 @Composable
-fun WeightAssigner() {
+fun WeightAssigner(weight:String, incrementWeight: () -> Unit, decrementWeight: () -> Unit) {
     Box {
         Row() {
             Icon(
                 tint = Color.White,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(48.dp).clickable(onClick = decrementWeight),
                 painter = painterResource(id = R.drawable.ic_baseline_remove_circle_outline_24),
                 contentDescription = null // decorative element
             )
@@ -61,7 +62,7 @@ fun WeightAssigner() {
                     .weight(1.0f)
             ) {
                 Text(
-                    text = "83,8 kg",
+                    text = "$weight kg",
                     style = MaterialTheme.typography.h4,
                     color = Color.White,
                     modifier = Modifier.align(Alignment.Center)
@@ -69,7 +70,7 @@ fun WeightAssigner() {
             }
             Icon(
                 tint = Color.White,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(48.dp).clickable(onClick = incrementWeight),
                 painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),
                 contentDescription = null
             )
@@ -80,5 +81,5 @@ fun WeightAssigner() {
 @Preview
 @Composable
 fun PreviewUserWeightInfo() {
-    UserWeightInfo()
+    UserWeightInfo(WeightInfo("1", "2"), {}, {})
 }

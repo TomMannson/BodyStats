@@ -1,9 +1,13 @@
 package com.tommannson.bodystats.feature.configuration
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tommannson.bodystats.infrastructure.configuration.ConfigDao
-import com.tommannson.bodystats.infrastructure.configuration.SavedStatsConfiguration
+import com.tommannson.bodystats.feature.home.ScreenState
+import com.tommannson.bodystats.infrastructure.configuration.ApplicationUser
+import com.tommannson.bodystats.infrastructure.configuration.Gender
+import com.tommannson.bodystats.infrastructure.configuration.UserDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -11,12 +15,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ConfigurationViewModel @Inject constructor(
-    val dao: ConfigDao
+    val dao: UserDao
 ) : ViewModel() {
 
-    fun submitConfiguration(stats: SavedStatsConfiguration) {
+    private val _configurationState: MutableLiveData<ConfigurationState> = MutableLiveData()
+    val configurationState: LiveData<ConfigurationState> = _configurationState
+
+    fun initializeScreen() {
         viewModelScope.launch(Dispatchers.IO) {
-            dao.insertAll(stats)
+            val user = dao.getAll().firstOrNull()
+            _configurationState.postValue(ConfigurationState(ScreenState.DataLoaded, user))
+        }
+    }
+
+    fun submit(name: String, height: Float, weight: Float, dreamWeight: Float) {
+        viewModelScope.launch(Dispatchers.IO) {
+
+            val currentUser = dao.getAll().firstOrNull()
+
+            if (currentUser == null) {
+                val user = ApplicationUser(name, height, weight, dreamWeight, Gender.FEMALE)
+                dao.insertAll(user)
+            } else {
+                currentUser.copy(name = name, height = height, weight = weight, dreamWeight = dreamWeight)
+                    .let { dao.updateUser(it) }
+            }
         }
     }
 }
+
+data class ConfigurationState(
+    val screenState: ScreenState,
+    val applicationUser: ApplicationUser?
+)

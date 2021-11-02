@@ -16,11 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MyProgress() {
+fun MyProgress(start: Float, end: Float, current: Float) {
+
+
+
     Column() {
         Box(Modifier.fillMaxWidth()) {
             Text(
-                "-15 kg",
+                "${calculateSign(current)}$current kg",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
@@ -31,14 +34,14 @@ fun MyProgress() {
                 .height(16.dp)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
-                .background(MaterialTheme.colors.secondary)
+                .background(Color.LightGray)
         ) {
             Box(
                 Modifier
                     .height(16.dp)
                     .clip(RoundedCornerShape(corner = CornerSize(8.dp)))
                     .background(MaterialTheme.colors.primary)
-                    .fillMaxWidth(.045f)
+                    .fillMaxWidth(calculateProgressPosition(start, end, current))
             )
             Box(
                 Modifier
@@ -59,17 +62,40 @@ fun MyProgress() {
         }
         Spacer(modifier = Modifier.height(4.dp))
         Row() {
-            Text("90 kg")
+            Text("${start} kg")
             Box(Modifier.fillMaxWidth()) {
-                Text("65 kg", modifier = Modifier.align(Alignment.CenterEnd))
+                Text("${end} kg", modifier = Modifier.align(Alignment.CenterEnd))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
+fun calculateSign(value: Float) = if(value < 0) "-" else ""
+
+fun calculateProgressPosition(start: Float, end: Float, current: Float) =
+    if(start > end){
+       if(current < end){
+           0f;
+       } else if(current > start){
+           1f
+       } else {
+           ((start - end) - (current - end)) / (start - end)
+       }
+    } else {
+        if(current < start){
+            1f;
+        } else if(current > end){
+            0f
+        } else {
+            (current - start) / (end - start)
+        }
+    }
+
+
+
 @Preview()
 @Composable
 fun PreviewProgress() {
-    MyProgress()
+    MyProgress(10f, 50f, 35f)
 }

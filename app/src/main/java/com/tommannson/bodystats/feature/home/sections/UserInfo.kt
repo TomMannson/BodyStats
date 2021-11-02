@@ -17,14 +17,20 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.tommannson.bodystats.feature.Screen
+import com.tommannson.bodystats.infrastructure.configuration.ApplicationUser
+import com.tommannson.bodystats.infrastructure.configuration.Gender
 
 @Composable
-fun UserInfo() {
+fun UserInfo(navController: NavController, currentUser: ApplicationUser) {
     Box(
         Modifier
             .fillMaxWidth()
             .wrapContentHeight()
     ) {
+
         Card(
             elevation = 5.dp
         ) {
@@ -45,14 +51,14 @@ fun UserInfo() {
                     }
                     Column(Modifier.weight(2.0f)) {
                         Column(Modifier.padding(start = 8.dp)) {
-                            Text("Gosia")
+                            Text(currentUser.name)
 
                             Text(
                                 buildAnnotatedString {
                                     withStyle(SpanStyle(color = Color.Black, fontSize = 12.sp)) {
                                         append("Wzrost: ")
                                     }
-                                    append("165 cm")
+                                    append("${currentUser.height} cm")
                                 },
                                 style = MaterialTheme.typography.caption, color = Color.Gray,
                             )
@@ -67,13 +73,22 @@ fun UserInfo() {
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
-                        TextButton(onClick = { /*TODO*/ }) {
+                        TextButton(onClick = {
+                            navController.navigate(Screen.ConfigurationScreen.route)
+
+
+                        }) {
                             Text("Edit Your info".uppercase())
                         }
                     }
                 }
                 Box(Modifier.padding(16.dp)) {
-                    MyProgress()
+
+                    val min = currentUser.weight
+                    val max = currentUser.dreamWeight
+                    val current = 75f
+
+                    MyProgress(min, max, current)
                 }
             }
         }
@@ -84,5 +99,5 @@ fun UserInfo() {
 @Preview
 @Composable
 fun PreviewUserInfo() {
-    UserInfo()
+    UserInfo(navController = rememberNavController(), currentUser = ApplicationUser("asd", 1.0f, 1.0f, 1f, Gender.FEMALE ))
 }

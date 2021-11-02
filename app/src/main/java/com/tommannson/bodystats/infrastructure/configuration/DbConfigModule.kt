@@ -22,21 +22,16 @@ object DbConfigModule {
 
     @Singleton
     @Provides
-    fun createConfigDao(db: AppDatabase): ConfigDao {
-        return db.configDao()
-    }
-
-    @Singleton
-    @Provides
     fun createUserDao(db: AppDatabase): UserDao {
         return db.userDao()
     }
 
     @Singleton
     @Provides
-    fun createNextDao(db: AppDatabase): NextDao {
-        return db.nextDao()
+    fun createStatsDao(db: AppDatabase): StatsDao {
+        return db.statsDao()
     }
+
 }
 
 
