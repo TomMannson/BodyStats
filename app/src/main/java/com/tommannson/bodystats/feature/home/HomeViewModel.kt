@@ -4,15 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.tommannson.bodystats.base.BaseViewmodel
+import com.tommannson.bodystats.feature.createstats.getStatFormatter
 import com.tommannson.bodystats.infrastructure.configuration.*
+import com.tommannson.bodystats.utils.fmt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import java.math.BigDecimal
-import java.math.MathContext
 import javax.inject.Inject
+
 
 @HiltViewModel
 class HomeViewModel
@@ -51,7 +53,10 @@ class HomeViewModel
                             user.weight
                         }
 
-                    val loadedWeightInfo = WeightInfo("$lastWeightLog", "${user.dreamWeight}")
+                    val loadedWeightInfo = WeightInfo(
+                        lastWeightLog,
+                        user.dreamWeight fmt getStatFormatter(Statistic.WEIGHT)
+                    )
 
 
                     _state.postValue(
@@ -85,12 +90,10 @@ class HomeViewModel
 
             if (foundWeight != null) {
                 val foundValue = foundWeight.value
-                val calculatedValue = BigDecimal(foundValue.toDouble()).add(BigDecimal(.1)).round(
-                    MathContext(1)
-                )
+                val calculatedValue = BigDecimal(foundValue.toDouble()).subtract(BigDecimal(.1))
                 statsDao.udateStats(listOf(foundWeight.copy(value = calculatedValue.toFloat())))
             } else {
-                val calculatedValue = BigDecimal(user.weight.toDouble()).add(BigDecimal(.1))
+                val calculatedValue = BigDecimal(user.weight.toDouble()).subtract(BigDecimal(.1))
                 val newStatsValue =
                     SavedStats(Statistic.WEIGHT, calculatedValue.toFloat(), operationTime, user.id)
                 statsDao.createNewStats(listOf(newStatsValue))
@@ -123,14 +126,15 @@ data class HomeState(
     val screenState: ScreenState,
     val currentUser: ApplicationUser? = null,
     val mapOfStats: Map<String, List<SavedStats>> = mapOf(),
-    val weightInfo: WeightInfo = WeightInfo("", ""),
+    val weightInfo: WeightInfo = WeightInfo(1f, ""),
 )
 
 data class WeightInfo(
-    val weight: String,
+    val weight: Float,
     val targetWeight: String
 ) {
 
+    val formattedWeight get() = weight fmt getStatFormatter(Statistic.WEIGHT)
 }
 
 sealed class ScreenState {

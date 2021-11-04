@@ -10,17 +10,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.tehras.charts.line.LineChart
-import com.github.tehras.charts.line.LineChartData
-import com.github.tehras.charts.line.LineChartData.Point
+import com.github.tehras.charts.line.LineChartData2D
+import com.github.tehras.charts.line.LineChartData2D.Point
 import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
 import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
 import com.github.tehras.charts.line.renderer.xaxis.SimpleXAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
+import com.tommannson.bodystats.feature.createstats.getStatFormatter
+import com.tommannson.bodystats.feature.createstats.getStatUnit
 import com.tommannson.bodystats.infrastructure.configuration.SavedStats
 import com.tommannson.bodystats.infrastructure.configuration.Statistic
+import com.tommannson.bodystats.utils.fmt
+import org.threeten.bp.LocalDate
 
 @Composable
-fun MyCharts(mapOfStats: Map<String, List<SavedStats>>) {
+fun MyCharts(mapOfStats: Map<String, List<SavedStats>>, onMoreClicked: () -> Unit) {
     Text("Moje statystyki", style = MaterialTheme.typography.h5)
     Spacer(modifier = Modifier.height(8.dp))
     Card(
@@ -29,37 +33,46 @@ fun MyCharts(mapOfStats: Map<String, List<SavedStats>>) {
         Column {
             SimpleChart(
                 chartName = "Waga", //WAGA
-                data = mapOfStats[Statistic.WEIGHT] ?: listOf()
+                data = mapOfStats[Statistic.WEIGHT] ?: listOf(),
+                typeOfdata = Statistic.WEIGHT
             )
             Divider()
             SimpleChart(
                 chartName = "Brzuch", //Brzuch
-                data = mapOfStats[Statistic.BELLY_STATISTIC] ?: listOf()
+                data = mapOfStats[Statistic.BELLY_STATISTIC] ?: listOf(),
+                typeOfdata = Statistic.BELLY_STATISTIC
             )
             Divider()
             SimpleChart(
                 chartName = "Talia",
-                data = mapOfStats[Statistic.ARM_STATISTIC] ?: listOf()
+                data = mapOfStats[Statistic.ARM_STATISTIC] ?: listOf(),
+                typeOfdata = Statistic.ARM_STATISTIC
             )
             Divider()
             SimpleChart(
                 chartName = "Procernt tłuszczu",
-                data = mapOfStats[Statistic.FAT_PERCENT] ?: listOf()
+                data = mapOfStats[Statistic.FAT_PERCENT] ?: listOf(),
+                typeOfdata = Statistic.FAT_PERCENT
             )
             TextButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ }) {
-                Text(text = "MORE")
+                onClick = onMoreClicked
+            ) {
+                Text(text = "WIĘCEJ")
             }
         }
     }
 }
 
 @Composable
-fun TryChart(list: List<Point>) {
+fun TryChart(list: List<Point<LocalDate>>) {
     LineChart(
-        lineChartData = LineChartData(
-            points = list
+        lineChartData = LineChartData2D(
+            points = list,
+            converter = { it.toEpochDay().toFloat() },
+            displayX = { "${it.dayOfMonth} ${it.monthValue}" },
+            minX = LocalDate.now().minusDays(10),
+            maxX = LocalDate.now().plusDays(10),
         ),
         // Optional properties.
         modifier = Modifier.fillMaxSize(),
@@ -78,9 +91,9 @@ fun TryChart(list: List<Point>) {
 }
 
 @Composable
-fun SimpleChart(chartName: String, data: List<SavedStats>) {
+fun SimpleChart(chartName: String, data: List<SavedStats>, typeOfdata: String) {
     if (data.isEmpty()) {
-        Text("data for $chartName is empty")
+        Text("Brak danych do wyświetlenia wykresu: $chartName", modifier = Modifier.padding(16.dp))
     } else {
         val dataTodisplay = mutableListOf<SavedStats>()
         dataTodisplay.addAll(data)
@@ -94,7 +107,7 @@ fun SimpleChart(chartName: String, data: List<SavedStats>) {
         SimpleChart(
             chartName = chartName,
             date = lastItem.submitedAt.toString(),
-            difference = "$differenceFromStart",
+            difference = "${differenceFromStart fmt getStatFormatter(typeOfdata)} ${getStatUnit(typeOfdata)}",
             savedStats = dataTodisplay
         )
     }
@@ -129,7 +142,13 @@ fun SimpleChart(
             }
             Box(modifier = Modifier.weight(1.3f)) {
 //                    Chart()
-                TryChart(savedStats.map { Point(it.value, "${it.submitedAt.dayOfMonth}.${it.submitedAt.monthValue}") })
+                TryChart(savedStats.map {
+                    Point(
+                        it.value,
+                        "${it.submitedAt.dayOfMonth}.${it.submitedAt.monthValue}",
+                        it.submitedAt
+                    )
+                })
             }
         }
 

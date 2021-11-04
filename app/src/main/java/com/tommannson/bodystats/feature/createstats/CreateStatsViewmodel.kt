@@ -3,17 +3,20 @@ package com.tommannson.bodystats.feature.createstats
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import com.tommannson.bodystats.base.BaseViewmodel
 import com.tommannson.bodystats.feature.home.ScreenState
 import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
 import com.tommannson.bodystats.infrastructure.configuration.SavedStats
+import com.tommannson.bodystats.infrastructure.configuration.Statistic
 import com.tommannson.bodystats.infrastructure.configuration.StatsDao
+import com.tommannson.bodystats.utils.fmt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import java.math.BigDecimal
-import java.math.RoundingMode
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,9 +28,11 @@ class CreateStatsViewmodel
 
     private val _state = MutableLiveData(State())
     val state: LiveData<State> = _state
+    lateinit var navController: NavController
 
 
-    fun initialiseData(paramsToLoad: List<String>) {
+    fun initialiseData(paramsToLoad: List<String>, nav: NavController) {
+        this.navController = nav
         val localState = _state.value!!
 
         val localValuesCopy = localState.valuesToSave.toMutableMap()
@@ -83,6 +88,9 @@ class CreateStatsViewmodel
             } else {
                 updateTime(savedValues)
             }
+            withContext(Dispatchers.Main) {
+                navController.popBackStack()
+            }
         }
     }
 
@@ -112,19 +120,19 @@ class CreateStatsViewmodel
 
     fun decreaseCurrent() {
         val localValue = _state.value!!
-        val localState = localValue.valuesToSave.toMutableMap()
-        val newValue =
-            localState[localValue.currentParamKey]?.toBigDecimal()?.subtract(.1.toBigDecimal())
-                ?: BigDecimal.ZERO
-        localState[localValue.currentParamKey] = newValue.toFloat()
-        _state.postValue(localValue.copy(valuesToSave = localState))
+        changeCurrentValue(getStatShift(localValue.currentParamKey) * (-1))
     }
 
     fun increaseCurrent() {
         val localValue = _state.value!!
+        changeCurrentValue(getStatShift(localValue.currentParamKey))
+    }
+
+    fun changeCurrentValue(difference: Double) {
+        val localValue = _state.value!!
         val localState = localValue.valuesToSave.toMutableMap()
         val newValue =
-            localState[localValue.currentParamKey]?.toBigDecimal()?.add(.1.toBigDecimal())
+            localState[localValue.currentParamKey]?.toBigDecimal()?.add(difference.toBigDecimal())
                 ?: BigDecimal.ZERO
         localState[localValue.currentParamKey] = newValue.toFloat()
         _state.postValue(localValue.copy(valuesToSave = localState))
@@ -137,17 +145,49 @@ data class State(
     val orderOfItemsToSave: List<String> = listOf(),
     val viewStateMachine: ScreenState = ScreenState.Init
 ) {
-    val currentValue get() = valuesToSave[orderOfItemsToSave[selectedStep]] ?: 0
+    val currentValue get() = valuesToSave[orderOfItemsToSave[selectedStep]]
+    val currentValueText get() = currentValue fmt formatter
     val currentParamKey get() = orderOfItemsToSave[selectedStep]
     val paramUnit get() = getStatUnit(currentParamKey)
+    val formatter get() = getStatFormatter(currentParamKey)
+    val nextButtonText get() = if (selectedStep < orderOfItemsToSave.size -1) "Dalej" else "Zakończ"
 }
 
-fun getStatUnit(stat: String) = when(stat){
-        in BASIC_PARAMS -> "cm"
-        else -> ""
-    }
+fun getStatUnit(stat: String) = when (stat) {
+    Statistic.WEIGHT -> "kg"
+    in BASIC_PARAMS -> "cm"
+    in listOf(Statistic.FAT_PERCENT, Statistic.TBW_PERCENT) -> "%"
+    Statistic.BMR -> "kcal"
+    Statistic.METABOLIC_AGE -> "lat"
+    in listOf(
+        Statistic.BONE_MASS,
+        Statistic.FAT_MASS,
+        Statistic.MUSCLE_MASS,
+        Statistic.IDEAL_BODY_WEIGHT,
+        Statistic.FTM,
+        Statistic.TBW
+    ) -> "kg"
 
-fun Float.round(decimals: Int): Float {
-    val decimal = BigDecimal(this.toDouble()).setScale(2, RoundingMode.HALF_EVEN)
-    return decimal.toFloat()
+    else -> ""
+}
+
+fun getStatShift(stat: String) = when (stat) {
+    in BASIC_PARAMS -> .5
+    in listOf(Statistic.FAT_PERCENT, Statistic.TBW_PERCENT) -> .1
+    Statistic.BMR -> 1.0
+    Statistic.BMI -> .1
+    in listOf(
+        Statistic.BONE_MASS,
+        Statistic.FAT_MASS,
+        Statistic.MUSCLE_MASS,
+        Statistic.IDEAL_BODY_WEIGHT,
+        Statistic.FTM,
+        Statistic.TBW
+    ) -> .1
+    else -> 1.0
+}
+
+fun getStatFormatter(stat: String) = when (stat) {
+    in listOf(Statistic.BMR, Statistic.METABOLIC_AGE, Statistic.VISCELAR_FAT_RATING) -> ".0f"
+    else -> ".1f"
 }

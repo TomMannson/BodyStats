@@ -11,6 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.feature.configuration.ConfigurationScreen
 import com.tommannson.bodystats.feature.home.HomeDashboardScreen
 import com.tommannson.bodystats.feature.home.MainViewModel
+import com.tommannson.bodystats.feature.previewstats.PreviewStatsScreen
 import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
 import com.tommannson.bodystats.infrastructure.configuration.BODY_COMPOSITION_PARAMS
 import com.tommannson.bodystats.ui.theme.ApplicationTheme
@@ -40,10 +41,13 @@ class MainActivity : AppCompatActivity() {
                         ConfigurationScreen(navController)
                     }
                     composable(Screen.CreateStatScreen.route) {
-                        CreateStatScreen(BASIC_PARAMS)
+                        CreateStatScreen(BASIC_PARAMS, navController)
                     }
                     composable(Screen.CreateBodyCompositionScreen.route) {
-                        CreateStatScreen(BODY_COMPOSITION_PARAMS)
+                        CreateStatScreen(BODY_COMPOSITION_PARAMS, navController)
+                    }
+                    composable(Screen.PreviewScreen.route) {
+                        PreviewStatsScreen(navController)
                     }
                 }
             }
@@ -61,7 +65,7 @@ sealed class Screen(val route: String) {
     object ConfigurationScreen : Screen("configuration")
     object CreateStatScreen : Screen("create_stats")
     object CreateBodyCompositionScreen : Screen("create_body_composition")
-
+    object PreviewScreen : Screen("preview_screen")
 
 
 }

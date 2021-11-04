@@ -40,7 +40,7 @@ fun UserWeightInfo(weightInfo: WeightInfo, incrementWeight: () -> Unit, decremen
             )
             Spacer(modifier = Modifier.height(16.dp))
             Box(modifier = Modifier.padding(horizontal = 16.dp)){
-                WeightAssigner(weightInfo.weight, incrementWeight, decrementWeight)
+                WeightAssigner(weightInfo.formattedWeight, incrementWeight, decrementWeight)
             }
         }
     }
@@ -81,5 +81,5 @@ fun WeightAssigner(weight:String, incrementWeight: () -> Unit, decrementWeight: 
 @Preview
 @Composable
 fun PreviewUserWeightInfo() {
-    UserWeightInfo(WeightInfo("1", "2"), {}, {})
+    UserWeightInfo(WeightInfo(1f, "2"), {}, {})
 }

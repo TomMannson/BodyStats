@@ -28,7 +28,6 @@ import com.tommannson.bodystats.feature.home.sections.MyCharts
 import com.tommannson.bodystats.feature.home.sections.Onboard
 import com.tommannson.bodystats.feature.home.sections.UserInfo
 import com.tommannson.bodystats.feature.home.sections.UserWeightInfo
-import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
 import com.tommannson.bodystats.infrastructure.configuration.FULL_LIST_OF_STATS
 
 @Composable
@@ -47,9 +46,6 @@ fun HomeDashboardScreen(navController: NavController) {
             TopAppBar(
                 title = { Text("BodyStats") }
             )
-        },
-        floatingActionButton = {
-
         },
         scaffoldState = scafoldState
     ) {
@@ -74,8 +70,12 @@ fun HomeDashboardScreen(navController: NavController) {
                     }
                 }
             } else {
-                UserInfo(navController, localState.currentUser)
-                UserWeightInfo(localState.weightInfo, viewmodel::increaseWeight, viewmodel::decreaseWeight)
+                UserInfo(navController, localState.currentUser, localState.weightInfo)
+                UserWeightInfo(
+                    localState.weightInfo,
+                    viewmodel::increaseWeight,
+                    viewmodel::decreaseWeight
+                )
                 ActionButtons(
                     onAddMeassurment = {
                         navController.navigate(Screen.CreateStatScreen.route)
@@ -84,7 +84,9 @@ fun HomeDashboardScreen(navController: NavController) {
                         navController.navigate(Screen.CreateBodyCompositionScreen.route)
                     }
                 )
-                MyCharts(localState.mapOfStats)
+                MyCharts(localState.mapOfStats, {
+                    navController.navigate(Screen.PreviewScreen.route)
+                })
             }
         }
     }

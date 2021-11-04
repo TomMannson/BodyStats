@@ -68,13 +68,13 @@ object LineChartUtils {
     )
   }
 
-  fun calculatePointLocation(
+  fun <T> calculatePointLocation(
     drawableArea: Rect,
-    lineChartData: LineChartData,
-    point: LineChartData.Point,
+    lineChartData: LineChartData2D<T>,
+    point: LineChartData2D.Point<T>,
     index: Int
   ): Offset {
-    val x = (index.toFloat() / (lineChartData.points.size - 1))
+    val x = if(lineChartData.points.size == 1) index.toFloat() else (index.toFloat() / (lineChartData.points.size - 1))
     val y = ((point.value - lineChartData.minYValue) / lineChartData.yRange)
 
     return Offset(
@@ -83,9 +83,9 @@ object LineChartUtils {
     )
   }
 
-  fun withProgress(
+  fun <T> withProgress(
     index: Int,
-    lineChartData: LineChartData,
+    lineChartData: LineChartData2D<T>,
     transitionProgress: Float,
     showWithProgress: (progress: Float) -> Unit
   ) {
@@ -104,9 +104,9 @@ object LineChartUtils {
     }
   }
 
-  fun calculateLinePath(
+  fun <T> calculateLinePath(
     drawableArea: Rect,
-    lineChartData: LineChartData,
+    lineChartData: LineChartData2D<T>,
     transitionProgress: Float
   ): Path = Path().apply {
     var prevPointLocation: Offset? = null
@@ -145,8 +145,8 @@ object LineChartUtils {
     }
   }
 
-  fun calculateFillPath(drawableArea: Rect,
-                        lineChartData: LineChartData,
+  fun <T>calculateFillPath(drawableArea: Rect,
+                        lineChartData: LineChartData2D<T>,
                         transitionProgress: Float
   ): Path = Path().apply {
 

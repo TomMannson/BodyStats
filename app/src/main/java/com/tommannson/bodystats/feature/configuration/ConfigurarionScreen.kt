@@ -22,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.configuration.widgets.IconTextField
+import com.tommannson.bodystats.utils.fmt
 
 @Composable
 fun ConfigurationScreen(navController: NavHostController) {
@@ -64,13 +65,13 @@ fun ConfigurationScreen(navController: NavHostController) {
                 mutableStateOf(localState.applicationUser?.name ?: "")
             }
             var heightState by remember {
-                mutableStateOf("${localState.applicationUser?.height ?: ""}" )
+                mutableStateOf(localState.applicationUser?.height fmt ".0f" )
             }
             var weightState by remember {
-                mutableStateOf("${localState.applicationUser?.weight ?: ""}")
+                mutableStateOf(localState.applicationUser?.weight fmt ".1f")
             }
             var dreamWeightState by remember {
-                mutableStateOf("${localState.applicationUser?.dreamWeight ?: ""}")
+                mutableStateOf(localState.applicationUser?.dreamWeight fmt ".1f")
             }
 
             val focusManager = LocalFocusManager.current
@@ -92,7 +93,7 @@ fun ConfigurationScreen(navController: NavHostController) {
 
                 IconTextField(
                     value = nameState,
-                    label = "Name",
+                    label = "Imię",
                     iconPainter = painterResource(id = R.drawable.ic_baseline_face_24),
                     onValueChange = {
                         nameState = it
@@ -104,7 +105,7 @@ fun ConfigurationScreen(navController: NavHostController) {
                 )
                 IconTextField(
                     value = heightState,
-                    label = "Height (cm)",
+                    label = "Wzrost (cm)",
                     iconPainter = painterResource(id = R.drawable.ic_baseline_height_24),
                     onValueChange = {
                         heightState = it
@@ -116,7 +117,7 @@ fun ConfigurationScreen(navController: NavHostController) {
                 )
                 IconTextField(
                     value = weightState,
-                    label = "Weight (kg)",
+                    label = "Waga (kg)",
                     iconPainter = painterResource(id = R.drawable.ic_baseline_face_24),
                     onValueChange = {
                         weightState = it
@@ -131,7 +132,7 @@ fun ConfigurationScreen(navController: NavHostController) {
 
                 IconTextField(
                     value = dreamWeightState,
-                    label = "Dream weight (kg)",
+                    label = "Waga marzeń (kg)",
                     iconPainter = painterResource(id = R.drawable.ic_baseline_auto_awesome_24),
                     onValueChange = {
                         dreamWeightState = it
@@ -158,9 +159,9 @@ fun ConfigurationScreen(navController: NavHostController) {
 
                         viewmodel.submit(
                             name = nameState,
-                            height = heightState.toFloat(),
-                            weight = weightState.toFloat(),
-                            dreamWeight = dreamWeightState.toFloat(),
+                            height = heightState.replace(",", ".").toFloat(),
+                            weight = weightState.replace(",", ".").toFloat(),
+                            dreamWeight = dreamWeightState.replace(",", ".").toFloat(),
                         )
 
                         navController.popBackStack()

@@ -1,7 +1,5 @@
 package com.tommannson.bodystats.feature
 
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,6 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.createstats.CreateStatsViewmodel
 import com.tommannson.bodystats.feature.createstats.model.Configurations
@@ -31,13 +31,13 @@ import com.tommannson.bodystats.ui.theme.lighPrimary
 
 
 @Composable
-fun CreateStatScreen(dataToCreate: List<String>) {
+fun CreateStatScreen(dataToCreate: List<String>, navController: NavController) {
 
     val config = Configurations.PARAMS_UI_MAP
     val viewModel: CreateStatsViewmodel = hiltViewModel()
 
     LaunchedEffect(key1 = viewModel) {
-        viewModel.initialiseData(dataToCreate)
+        viewModel.initialiseData(dataToCreate, navController)
     }
 
     val state by viewModel.state.observeAsState()
@@ -97,7 +97,6 @@ fun CreateStatScreen(dataToCreate: List<String>) {
             ) {
                 val currentColor = remember(key1 = currentNumber) { currentNumber }
 
-                Crossfade(targetState = currentColor, animationSpec = tween(500)) { target ->
                     Column(
                         modifier = Modifier.verticalScroll(rememberScrollState())
                     ) {
@@ -148,7 +147,7 @@ fun CreateStatScreen(dataToCreate: List<String>) {
 
                                 var textForDisplay by remember(state!!.currentValue) {
                                     mutableStateOf(
-                                        state!!.currentValue.toString()
+                                        state!!.currentValueText
                                     )
                                 }
 
@@ -159,9 +158,10 @@ fun CreateStatScreen(dataToCreate: List<String>) {
                                     value = textForDisplay,
                                     onValueChange = {
                                         try {
-                                            viewModel.setValue(it.toFloat())
+                                            viewModel.setValue(it.replace(",", ".").toFloat())
                                             textForDisplay = it
                                         } catch (ex: Exception) {
+                                            ex.printStackTrace()
                                         }
                                     },
                                     keyboardOptions = KeyboardOptions(
@@ -192,17 +192,19 @@ fun CreateStatScreen(dataToCreate: List<String>) {
                                 .padding(16.dp),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            Button(onClick = viewModel::goToPrevious) {
-                                Text("Prev")
+                            if((state?.selectedStep ?: 0) != 0 ) {
+                                Button(onClick = viewModel::goToPrevious) {
+                                    Text("Poprzedni")
+                                }
+                                Spacer(modifier = Modifier.width(4.dp))
                             }
-                            Spacer(modifier = Modifier.width(4.dp))
                             Button(onClick = viewModel::goToNext) {
-                                Text("Next")
+                                Text(state?.nextButtonText ?: "")
                             }
                         }
                     }
                 }
-            }
+
         }
     }
 
@@ -213,6 +215,6 @@ fun CreateStatScreen(dataToCreate: List<String>) {
 @Composable
 fun PreviewCreateStat() {
     ApplicationTheme(useDarkColors = false) {
-        CreateStatScreen(BASIC_PARAMS)
+        CreateStatScreen(BASIC_PARAMS, rememberNavController())
     }
 }

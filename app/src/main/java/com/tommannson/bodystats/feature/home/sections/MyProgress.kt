@@ -14,6 +14,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tommannson.bodystats.feature.createstats.getStatFormatter
+import com.tommannson.bodystats.infrastructure.configuration.Statistic
+import com.tommannson.bodystats.utils.fmt
 
 @Composable
 fun MyProgress(start: Float, end: Float, current: Float) {
@@ -23,7 +26,7 @@ fun MyProgress(start: Float, end: Float, current: Float) {
     Column() {
         Box(Modifier.fillMaxWidth()) {
             Text(
-                "${calculateSign(current)}$current kg",
+                "${calculateSign(current)}${current fmt ".1f"}  kg",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
@@ -62,9 +65,9 @@ fun MyProgress(start: Float, end: Float, current: Float) {
         }
         Spacer(modifier = Modifier.height(4.dp))
         Row() {
-            Text("${start} kg")
+            Text("${start fmt getStatFormatter(Statistic.WEIGHT)} kg")
             Box(Modifier.fillMaxWidth()) {
-                Text("${end} kg", modifier = Modifier.align(Alignment.CenterEnd))
+                Text("${end fmt getStatFormatter(Statistic.WEIGHT)} kg", modifier = Modifier.align(Alignment.CenterEnd))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -76,9 +79,9 @@ fun calculateSign(value: Float) = if(value < 0) "-" else ""
 fun calculateProgressPosition(start: Float, end: Float, current: Float) =
     if(start > end){
        if(current < end){
-           0f;
+           1f;
        } else if(current > start){
-           1f
+           0f
        } else {
            ((start - end) - (current - end)) / (start - end)
        }

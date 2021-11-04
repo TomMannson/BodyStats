@@ -30,8 +30,8 @@ import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.YAxisDrawer
 
 @Composable
-fun LineChart(
-  lineChartData: LineChartData,
+fun <T> LineChart(
+  lineChartData: LineChartData2D<T>,
   modifier: Modifier = Modifier,
   animation: AnimationSpec<Float> = simpleChartAnimation(),
   pointDrawer: PointDrawer = FilledCircularPointDrawer(),
@@ -147,4 +147,4 @@ fun LineChart(
   }
 }
 
-fun simpleChartAnimation() = TweenSpec<Float>(durationMillis = 500)
+fun simpleChartAnimation() = TweenSpec<Float>(durationMillis = 300)
