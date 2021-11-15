@@ -173,7 +173,7 @@ fun PreviewStatsScreen(navController: NavHostController, itemToSelect: String? =
                             Text(
                                 text = "Historia",
                                 style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold),
-                                modifier = Modifier.padding(start = 16.dp)
+                                modifier = Modifier.padding(start = 16.dp, top = 16.dp)
                             )
                         }
 

@@ -183,7 +183,7 @@ data class State(
     val currentParamKey get() = orderOfItemsToSave[selectedStep]
     val paramUnit get() = getStatUnit(currentParamKey)
     val formatter get() = getStatFormatter(currentParamKey)
-    val nextButtonText get() = if (selectedStep < orderOfItemsToSave.size - 1) "Dalej" else "Zakończ"
+    val nextButtonText get() = if (selectedStep < orderOfItemsToSave.size - 1) "Następny" else "Zakończ"
 }
 
 fun getStatUnit(stat: String) = when (stat) {

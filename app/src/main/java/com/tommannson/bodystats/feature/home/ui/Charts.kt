@@ -58,7 +58,7 @@ fun MyCharts(
                 }
             }
             val listToDisplay =
-                listOf(Statistic.WEIGHT, Statistic.BELLY_STATISTIC, Statistic.ARM_STATISTIC)
+                listOf(Statistic.WEIGHT, Statistic.WAIST_STATISTIC, Statistic.BELLY_STATISTIC)
 
             for (item in listToDisplay) {
                 val config = PARAMS_UI_MAP[item]

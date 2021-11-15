@@ -93,7 +93,6 @@ fun UserInfo(navController: NavController, currentUser: ApplicationUser, weightI
 
                     val min = currentUser.weight
                     val max = currentUser.dreamWeight
-                    val current = 75f
 
                     MyProgress(min, max, weightInfo.weight)
                 }

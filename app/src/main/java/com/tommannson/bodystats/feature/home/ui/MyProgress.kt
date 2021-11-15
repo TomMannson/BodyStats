@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,12 +22,10 @@ import com.tommannson.bodystats.utils.fmt
 @Composable
 fun MyProgress(start: Float, end: Float, current: Float) {
 
-
-
     Column() {
         Box(Modifier.fillMaxWidth()) {
             Text(
-                "${calculateSign(current)}${current fmt "#.#"}  kg",
+                "${Math.abs(start - current) fmt "#.#"}${calculateSign(current, start)}  kg",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.align(Alignment.TopCenter)
             )
@@ -74,9 +73,16 @@ fun MyProgress(start: Float, end: Float, current: Float) {
     }
 }
 
-fun calculateSign(value: Float) = if(value < 0) "-" else ""
+fun calculateSign(value: Float, reference: Float) =  if (value < reference) {
+    "\u2193"
+} else if (value > reference) {
+    "↑"
+} else {
+    ""
+}
 
 fun calculateProgressPosition(start: Float, end: Float, current: Float) =
+
     if(start > end){
        if(current < end){
            1f;
