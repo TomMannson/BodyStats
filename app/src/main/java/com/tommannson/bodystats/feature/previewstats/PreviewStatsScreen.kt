@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -28,8 +29,8 @@ import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.createstats.getStatFormatter
 import com.tommannson.bodystats.feature.createstats.getStatUnit
 import com.tommannson.bodystats.feature.createstats.model.Configurations
-import com.tommannson.bodystats.feature.home.ScreenState
-import com.tommannson.bodystats.infrastructure.configuration.FULL_LIST_OF_STATS
+import com.tommannson.bodystats.feature.configuration.ScreenState
+import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
 import com.tommannson.bodystats.utils.fmt
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
@@ -37,9 +38,11 @@ import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun PreviewStatsScreen(navController: NavHostController) {
+fun PreviewStatsScreen(navController: NavHostController, itemToSelect: String? = null) {
 
+    val listToDisplay: List<String> = BASIC_PARAMS
     val scafoldState = rememberScaffoldState();
+    val selectedPage = itemToSelect?.let { listToDisplay.indexOf(itemToSelect) } ?: 0
 
     Scaffold(
         topBar = {
@@ -63,7 +66,7 @@ fun PreviewStatsScreen(navController: NavHostController) {
         val screenState by viewmodel.state.collectAsState()
 
         LaunchedEffect(key1 = viewmodel) {
-            viewmodel.initPreview()
+            viewmodel.initPreview(listToDisplay)
         }
 
         val localState = screenState
@@ -75,22 +78,20 @@ fun PreviewStatsScreen(navController: NavHostController) {
             }
         } else {
             PagableTabLayout(
-                FULL_LIST_OF_STATS.size,
-                rememberPreviewScreenState(0),
+                listToDisplay.size,
+                rememberPreviewScreenState(selectedPage),
                 { index ->
-                    Configurations.PARAMS_UI_MAP[FULL_LIST_OF_STATS[index]]?.name ?: "NO_NAME"
+                    Configurations.PARAMS_UI_MAP[listToDisplay[index]]?.name ?: "NO_NAME"
                 },
             ) { page ->
 
-                val listToDisplay =
-                    localState.groupded[FULL_LIST_OF_STATS[page]]?.toMutableList()
+                val listOfItems =
+                    localState.groupded[listToDisplay[page]]?.toMutableList()
                         ?: mutableListOf()
 
-                if (listToDisplay.isEmpty()) {
+                if (listOfItems.isEmpty()) {
                     Text("Brak danych do wyświetlenia")
                 } else {
-
-
                     LazyColumn(
                         modifier = Modifier.fillMaxSize()
                     ) {
@@ -133,7 +134,7 @@ fun PreviewStatsScreen(navController: NavHostController) {
                             LineChart(
                                 lineChartData = LineChartData2D<LocalDate>(
                                     startAtZero = true,
-                                    points = listToDisplay.map {
+                                    points = listOfItems.map {
                                         val textToDisplay =
                                             "${it.submitedAt.dayOfMonth} ${it.submitedAt.monthValue}"
                                         LineChartData2D.Point(
@@ -170,8 +171,8 @@ fun PreviewStatsScreen(navController: NavHostController) {
 
                         item {
                             Text(
-                                text = "History",
-                                style = MaterialTheme.typography.h4,
+                                text = "Historia",
+                                style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold),
                                 modifier = Modifier.padding(start = 16.dp)
                             )
                         }
@@ -179,7 +180,7 @@ fun PreviewStatsScreen(navController: NavHostController) {
                         var formatter = DateTimeFormatter.ofPattern("dd MMMM")
 
 
-                        for (statItem in listToDisplay ?: listOf()) {
+                        for (statItem in listOfItems.reversed()) {
                             item(statItem.id) {
                                 Row(
                                     modifier = Modifier
@@ -189,12 +190,12 @@ fun PreviewStatsScreen(navController: NavHostController) {
                                 ) {
                                     Text(
                                         statItem.submitedAt.format(formatter),
-                                        style = MaterialTheme.typography.h6
+                                        style = MaterialTheme.typography.subtitle1
                                     )
                                     Text(
-                                        "${statItem.value fmt getStatFormatter(FULL_LIST_OF_STATS[page])} ${
+                                        "${statItem.value fmt getStatFormatter(listToDisplay[page])} ${
                                             getStatUnit(
-                                                FULL_LIST_OF_STATS[page]
+                                                listToDisplay[page]
                                             )
                                         }", modifier = Modifier.align(Alignment.CenterVertically)
                                     )

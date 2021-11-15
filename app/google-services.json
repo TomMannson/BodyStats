@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "838339406021",
+    "firebase_url": "https://project-495848145610318253.firebaseio.com",
+    "project_id": "project-495848145610318253",
+    "storage_bucket": "project-495848145610318253.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838339406021:android:8e71eb6172b898a67028ac",
+        "android_client_info": {
+          "package_name": "com.makolab.conference.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838339406021-nf136pfa46eofbrjrs3nboo8r4gsmmgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDKbKs5dJPvAc_oOS5Yoi7gCwBU6CmfJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838339406021-nf136pfa46eofbrjrs3nboo8r4gsmmgc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:838339406021:android:6a24bb0115ef85c97028ac",
+        "android_client_info": {
+          "package_name": "com.tommannson.bodystats"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "838339406021-nf136pfa46eofbrjrs3nboo8r4gsmmgc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDKbKs5dJPvAc_oOS5Yoi7gCwBU6CmfJw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "838339406021-nf136pfa46eofbrjrs3nboo8r4gsmmgc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

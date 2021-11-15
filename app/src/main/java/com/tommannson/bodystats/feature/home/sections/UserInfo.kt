@@ -65,7 +65,7 @@ fun UserInfo(navController: NavController, currentUser: ApplicationUser, weightI
                                     withStyle(SpanStyle(color = Color.Black, fontSize = 12.sp)) {
                                         append("Wzrost: ")
                                     }
-                                    append("${currentUser.height fmt ".0f"} cm")
+                                    append("${currentUser.height fmt "#.#"} cm")
                                 },
                                 style = MaterialTheme.typography.caption, color = Color.Gray,
                             )
@@ -74,7 +74,7 @@ fun UserInfo(navController: NavController, currentUser: ApplicationUser, weightI
                                     withStyle(SpanStyle(color = Color.Black, fontSize = 12.sp)) {
                                         append("Płeć: ")
                                     }
-                                    append("Kobieta")
+                                    append(if(currentUser.sex == Gender.FEMALE) "Kobieta" else "Mężczyzna")
                                 },
                                 style = MaterialTheme.typography.caption, color = Color.Gray,
                             )

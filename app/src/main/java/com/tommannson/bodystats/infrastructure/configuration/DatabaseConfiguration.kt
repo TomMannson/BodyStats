@@ -33,6 +33,7 @@ object ParamType {
 
 object Statistic {
     const val WEIGHT = "weight"
+    const val WEIGHT_COMPOSITION = "weight_composition"
     //basics
     const val BUST_STATISTIC = "bust"
     const val ARM_STATISTIC = "arm"
@@ -44,7 +45,7 @@ object Statistic {
     //body composition
     const val FAT_PERCENT= "FAT_PERCENT"
     const val FAT_MASS = "FAT_MASS"
-    const val FTM = "ftm"
+    const val FFM = "ftm"
     const val MUSCLE_MASS = "muscle_mass"
     const val TBW = "tbw"
     const val TBW_PERCENT = "tbw_percent"
@@ -57,6 +58,7 @@ object Statistic {
 }
 
 val BASIC_PARAMS = listOf(
+    WEIGHT,
     BUST_STATISTIC,
     ARM_STATISTIC,
     WAIST_STATISTIC,
@@ -67,9 +69,10 @@ val BASIC_PARAMS = listOf(
 )
 
 val BODY_COMPOSITION_PARAMS = listOf(
-    Statistic.FAT_PERCENT,
+    Statistic.WEIGHT_COMPOSITION,
     Statistic.FAT_MASS,
-    Statistic.FTM,
+    Statistic.FAT_PERCENT,
+    Statistic.FFM,
     Statistic.MUSCLE_MASS,
     Statistic.TBW,
     Statistic.TBW_PERCENT,
@@ -78,12 +81,10 @@ val BODY_COMPOSITION_PARAMS = listOf(
     Statistic.METABOLIC_AGE,
     Statistic.VISCELAR_FAT_RATING,
     Statistic.BMI,
-    Statistic.IDEAL_BODY_WEIGHT
 )
 
 val FULL_LIST_OF_STATS = mutableListOf<String>()
     .also {
-        it.add(WEIGHT)
         it.addAll(BASIC_PARAMS)
         it.addAll(BODY_COMPOSITION_PARAMS)
     }

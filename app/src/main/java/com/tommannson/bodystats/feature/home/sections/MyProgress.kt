@@ -26,7 +26,7 @@ fun MyProgress(start: Float, end: Float, current: Float) {
     Column() {
         Box(Modifier.fillMaxWidth()) {
             Text(
-                "${calculateSign(current)}${current fmt ".1f"}  kg",
+                "${calculateSign(current)}${current fmt "#.#"}  kg",
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.align(Alignment.TopCenter)
             )

@@ -1,8 +1,5 @@
 package com.tommannson.bodystats.feature.configuration
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,6 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.configuration.widgets.IconTextField
+import com.tommannson.bodystats.feature.configuration.widgets.SenderSelector
+import com.tommannson.bodystats.infrastructure.configuration.Gender
 import com.tommannson.bodystats.utils.fmt
 
 @Composable
@@ -65,13 +64,16 @@ fun ConfigurationScreen(navController: NavHostController) {
                 mutableStateOf(localState.applicationUser?.name ?: "")
             }
             var heightState by remember {
-                mutableStateOf(localState.applicationUser?.height fmt ".0f" )
+                mutableStateOf(localState.applicationUser?.height fmt "#" )
             }
             var weightState by remember {
-                mutableStateOf(localState.applicationUser?.weight fmt ".1f")
+                mutableStateOf(localState.applicationUser?.weight fmt "#.#")
             }
             var dreamWeightState by remember {
-                mutableStateOf(localState.applicationUser?.dreamWeight fmt ".1f")
+                mutableStateOf(localState.applicationUser?.dreamWeight fmt "#.#")
+            }
+            var dreamGenderState by remember {
+                mutableStateOf(localState.applicationUser?.sex ?: Gender.MALE)
             }
 
             val focusManager = LocalFocusManager.current
@@ -127,6 +129,9 @@ fun ConfigurationScreen(navController: NavHostController) {
                         keyboardType = KeyboardType.Number
                     ),
                 )
+                SenderSelector(value = dreamGenderState) {
+                    dreamGenderState = it
+                }
 
                 Text("Powiedz nam także jak twoim zdaniem powinna wyglądać twoja wymażona waga", modifier = Modifier.padding(16.dp))
 
@@ -156,12 +161,12 @@ fun ConfigurationScreen(navController: NavHostController) {
                         .align(Alignment.End),
                     onClick = {
 
-
                         viewmodel.submit(
                             name = nameState,
                             height = heightState.replace(",", ".").toFloat(),
                             weight = weightState.replace(",", ".").toFloat(),
                             dreamWeight = dreamWeightState.replace(",", ".").toFloat(),
+                            gender = dreamGenderState
                         )
 
                         navController.popBackStack()

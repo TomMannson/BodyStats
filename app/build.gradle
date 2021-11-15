@@ -3,13 +3,14 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
 }
 
 android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.bodystats"
+        applicationId "com.tommannson.bodystats"
         minSdk 24
         targetSdk 31
         versionCode 1
@@ -50,6 +51,25 @@ android {
 
 dependencies {
 
+    implementation platform('com.google.firebase:firebase-bom:29.0.0')
+
+    //FIREBASE
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-ml-vision:24.0.3'
+
+
+    def camerax_version = '1.1.0-alpha10'
+    implementation "androidx.camera:camera-core:$camerax_version"
+
+    // CameraX Camera2 extensions
+    implementation "androidx.camera:camera-camera2:$camerax_version"
+
+    // CameraX Lifecycle library
+    implementation "androidx.camera:camera-lifecycle:$camerax_version"
+
+    // CameraX View class
+    implementation 'androidx.camera:camera-view:1.0.0-alpha30'
+
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     def lifecycle_version = "2.3.1"
     def compose_version = "1.0.3"
@@ -78,6 +98,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     //image loading
     implementation("io.coil-kt:coil:1.4.0")
+    implementation 'de.siegmar:fastcsv:2.1.0'
 
     //ASYNC
     implementation("androidx.room:room-ktx:$room_version")

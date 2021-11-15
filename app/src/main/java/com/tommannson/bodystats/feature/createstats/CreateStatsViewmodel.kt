@@ -5,11 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.tommannson.bodystats.base.BaseViewmodel
-import com.tommannson.bodystats.feature.home.ScreenState
-import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
-import com.tommannson.bodystats.infrastructure.configuration.Statistic
-import com.tommannson.bodystats.infrastructure.configuration.StatsDao
+import com.tommannson.bodystats.feature.configuration.ScreenState
+import com.tommannson.bodystats.infrastructure.configuration.*
+import com.tommannson.bodystats.model.paramrecalculation.ProcessRecalculator
 import com.tommannson.bodystats.utils.fmt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,28 +15,34 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import java.math.BigDecimal
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class CreateStatsViewmodel
 @Inject constructor(
-    val statsDao: StatsDao
+    val statsDao: StatsDao,
+    val userDao: UserDao
 ) : BaseViewmodel() {
-
 
     private val _state = MutableLiveData(State())
     val state: LiveData<State> = _state
     lateinit var navController: NavController
+    val recalculator = ProcessRecalculator()
+    lateinit var user: ApplicationUser
 
-
-    fun initialiseData(paramsToLoad: List<String>, nav: NavController) {
+    fun initialiseData(
+        paramsToMeasure: List<String>,
+        nav: NavController
+    ) {
         this.navController = nav
         val localState = _state.value!!
 
         val localValuesCopy = localState.valuesToSave.toMutableMap()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val result = statsDao.getLastParams(1, paramsToLoad)
+            user = userDao.getAll().first()
+            val result = statsDao.getLastParams(1, paramsToMeasure)
             if (!result.isEmpty()) {
                 for (item in result) {
                     localValuesCopy[item.statName] = item.value
@@ -48,7 +52,8 @@ class CreateStatsViewmodel
                 localState.copy(
                     viewStateMachine = ScreenState.DataLoaded,
                     valuesToSave = localValuesCopy,
-                    orderOfItemsToSave = paramsToLoad
+                    orderOfItemsToSave = paramsToMeasure,
+                    invalidData = false
                 )
             )
         }
@@ -56,8 +61,16 @@ class CreateStatsViewmodel
 
     fun goToNext() {
         val currentStep = _state.value!!.selectedStep
+        val orderOfItemsToSave = _state.value!!.orderOfItemsToSave
+        val values = _state.value?.valuesToSave ?: mapOf()
         if (currentStep < _state.value!!.orderOfItemsToSave.size - 1) {
-            _state.postValue(_state.value!!.copy(selectedStep = currentStep + 1))
+            val nextValue = values[orderOfItemsToSave[currentStep + 1]] == null
+            _state.postValue(
+                _state.value!!.copy(
+                    selectedStep = currentStep + 1,
+                    invalidData = nextValue
+                )
+            )
         } else {
             saveValues()
         }
@@ -66,20 +79,33 @@ class CreateStatsViewmodel
     fun goToPrevious() {
         val currentStep = _state.value!!.selectedStep
         if (currentStep > 0) {
-            _state.postValue(_state.value!!.copy(selectedStep = currentStep - 1))
+            _state.postValue(
+                _state.value!!.copy(
+                    selectedStep = currentStep - 1,
+                    invalidData = false
+                )
+            )
         }
     }
 
-    fun setValue(value: Float) {
-        val localValue = _state.value!!
-        val valuesCopy = localValue.valuesToSave.toMutableMap()
-        valuesCopy[localValue.currentParamKey] = value
-        _state.postValue(localValue.copy(valuesToSave = valuesCopy))
+    fun setValue(value: String) {
+        try {
+            val newValue = value.replace(",", ".").toFloat()
+            val localValue = _state.value!!
+            val valuesCopy = localValue.valuesToSave.toMutableMap()
+            valuesCopy[localValue.currentParamKey] = newValue
+            recalculator.performCalculations(localValue.currentParamKey, valuesCopy, user = user)
+            _state.postValue(localValue.copy(valuesToSave = valuesCopy, invalidData = false))
+        } catch (ex: Exception) {
+            lockNext()
+        }
+
     }
 
     fun saveValues() {
         val localState = state.value as State
         invokeTransaction {
+
             val now = LocalDate.now()
             val savedValues = statsDao.getParamsForDate(1, now, localState.orderOfItemsToSave)
 
@@ -135,7 +161,13 @@ class CreateStatsViewmodel
             localState[localValue.currentParamKey]?.toBigDecimal()?.add(difference.toBigDecimal())
                 ?: BigDecimal.ZERO
         localState[localValue.currentParamKey] = newValue.toFloat()
-        _state.postValue(localValue.copy(valuesToSave = localState))
+        recalculator.performCalculations(localValue.currentParamKey, localState, user = user)
+        _state.postValue(localValue.copy(valuesToSave = localState, invalidData = false))
+    }
+
+    fun lockNext() {
+        val localValue = _state.value!!
+        _state.postValue(localValue.copy(invalidData = true))
     }
 }
 
@@ -143,18 +175,20 @@ data class State(
     val selectedStep: Int = 0,
     val valuesToSave: MutableMap<String, Float> = mutableMapOf(),
     val orderOfItemsToSave: List<String> = listOf(),
-    val viewStateMachine: ScreenState = ScreenState.Init
+    val viewStateMachine: ScreenState = ScreenState.Init,
+    val invalidData: Boolean = true
 ) {
     val currentValue get() = valuesToSave[orderOfItemsToSave[selectedStep]]
     val currentValueText get() = currentValue fmt formatter
     val currentParamKey get() = orderOfItemsToSave[selectedStep]
     val paramUnit get() = getStatUnit(currentParamKey)
     val formatter get() = getStatFormatter(currentParamKey)
-    val nextButtonText get() = if (selectedStep < orderOfItemsToSave.size -1) "Dalej" else "Zakończ"
+    val nextButtonText get() = if (selectedStep < orderOfItemsToSave.size - 1) "Dalej" else "Zakończ"
 }
 
 fun getStatUnit(stat: String) = when (stat) {
     Statistic.WEIGHT -> "kg"
+    Statistic.WEIGHT_COMPOSITION -> "kg"
     in BASIC_PARAMS -> "cm"
     in listOf(Statistic.FAT_PERCENT, Statistic.TBW_PERCENT) -> "%"
     Statistic.BMR -> "kcal"
@@ -164,7 +198,7 @@ fun getStatUnit(stat: String) = when (stat) {
         Statistic.FAT_MASS,
         Statistic.MUSCLE_MASS,
         Statistic.IDEAL_BODY_WEIGHT,
-        Statistic.FTM,
+        Statistic.FFM,
         Statistic.TBW
     ) -> "kg"
 
@@ -174,20 +208,21 @@ fun getStatUnit(stat: String) = when (stat) {
 fun getStatShift(stat: String) = when (stat) {
     in BASIC_PARAMS -> .5
     in listOf(Statistic.FAT_PERCENT, Statistic.TBW_PERCENT) -> .1
-    Statistic.BMR -> 1.0
+    in listOf(Statistic.BMR, Statistic.VISCELAR_FAT_RATING, Statistic.METABOLIC_AGE) -> 1.0
     Statistic.BMI -> .1
     in listOf(
+        Statistic.WEIGHT_COMPOSITION,
         Statistic.BONE_MASS,
         Statistic.FAT_MASS,
         Statistic.MUSCLE_MASS,
         Statistic.IDEAL_BODY_WEIGHT,
-        Statistic.FTM,
+        Statistic.FFM,
         Statistic.TBW
     ) -> .1
-    else -> 1.0
+    else -> .1
 }
 
 fun getStatFormatter(stat: String) = when (stat) {
-    in listOf(Statistic.BMR, Statistic.METABOLIC_AGE, Statistic.VISCELAR_FAT_RATING) -> ".0f"
-    else -> ".1f"
+    in listOf(Statistic.BMR, Statistic.METABOLIC_AGE, Statistic.VISCELAR_FAT_RATING) -> "#"
+    else -> "#.#"
 }

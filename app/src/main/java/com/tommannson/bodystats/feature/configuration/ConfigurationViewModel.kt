@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tommannson.bodystats.feature.home.ScreenState
+import com.tommannson.bodystats.feature.home.HomeState
 import com.tommannson.bodystats.infrastructure.configuration.ApplicationUser
 import com.tommannson.bodystats.infrastructure.configuration.Gender
 import com.tommannson.bodystats.infrastructure.configuration.UserDao
@@ -28,7 +28,7 @@ class ConfigurationViewModel @Inject constructor(
         }
     }
 
-    fun submit(name: String, height: Float, weight: Float, dreamWeight: Float) {
+    fun submit(name: String, height: Float, weight: Float, dreamWeight: Float, gender: Int) {
         viewModelScope.launch(Dispatchers.IO) {
 
             val currentUser = dao.getAll().firstOrNull()
@@ -37,7 +37,7 @@ class ConfigurationViewModel @Inject constructor(
                 val user = ApplicationUser(name, height, weight, dreamWeight, Gender.FEMALE)
                 dao.insertAll(user)
             } else {
-                currentUser.copy(name = name, height = height, weight = weight, dreamWeight = dreamWeight)
+                currentUser.copy(name = name, height = height, weight = weight, dreamWeight = dreamWeight, sex = gender)
                     .let { dao.updateUser(it) }
             }
         }
@@ -48,3 +48,9 @@ data class ConfigurationState(
     val screenState: ScreenState,
     val applicationUser: ApplicationUser?
 )
+
+sealed class ScreenState {
+    object Init: ScreenState()
+    object DataLoaded: ScreenState()
+    object Loading: ScreenState()
+}

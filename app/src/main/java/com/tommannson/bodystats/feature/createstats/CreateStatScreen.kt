@@ -21,17 +21,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.R
+import com.tommannson.bodystats.feature.configuration.ScreenState
 import com.tommannson.bodystats.feature.createstats.CreateStatsViewmodel
 import com.tommannson.bodystats.feature.createstats.model.Configurations
 import com.tommannson.bodystats.feature.createstats.textstyling.UnitVisualTransformation
-import com.tommannson.bodystats.feature.home.ScreenState
 import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
 import com.tommannson.bodystats.ui.theme.ApplicationTheme
 import com.tommannson.bodystats.ui.theme.lighPrimary
+import java.util.*
 
 
 @Composable
-fun CreateStatScreen(dataToCreate: List<String>, navController: NavController) {
+fun CreateStatScreen(
+    dataToCreate: List<String>,
+    navController: NavController,
+) {
 
     val config = Configurations.PARAMS_UI_MAP
     val viewModel: CreateStatsViewmodel = hiltViewModel()
@@ -95,115 +99,122 @@ fun CreateStatScreen(dataToCreate: List<String>, navController: NavController) {
                 modifier = Modifier
                     .fillMaxHeight()
             ) {
-                val currentColor = remember(key1 = currentNumber) { currentNumber }
 
-                    Column(
-                        modifier = Modifier.verticalScroll(rememberScrollState())
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
                     ) {
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            val localState = state!!
-                            val paramConfig = config[localState.currentParamKey]
-                            if (paramConfig != null) {
-                                Image(
-                                    modifier = Modifier
-                                        .align(Alignment.Center),
-                                    contentScale = ContentScale.FillBounds,
-                                    painter = painterResource(id = paramConfig.image),
-                                    contentDescription = null,
-                                )
-                            }
-                        }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            Text(
-                                config[state!!.currentParamKey]?.name ?: "NO_NAME",
-                                modifier = Modifier.align(Alignment.Center),
-                                style = MaterialTheme.typography.h4
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Icon(
+                        val localState = state!!
+                        val paramConfig = config[localState.currentParamKey]
+                        if (paramConfig != null) {
+                            Image(
                                 modifier = Modifier
-                                    .padding(start = 32.dp, end = 8.dp)
-                                    .size(48.dp)
-                                    .clickable(onClick = viewModel::decreaseCurrent),
-                                painter = painterResource(id = R.drawable.ic_baseline_remove_circle_outline_24),
-                                contentDescription = null // decorative element
-                            )
-                            Box(
-                                modifier = Modifier.weight(1f)
-                            ) {
-
-                                var textForDisplay by remember(state!!.currentValue) {
-                                    mutableStateOf(
-                                        state!!.currentValueText
-                                    )
-                                }
-
-                                OutlinedTextField(
-                                    textStyle = LocalTextStyle.current.copy(
-                                        textAlign = TextAlign.Center
-                                    ),
-                                    value = textForDisplay,
-                                    onValueChange = {
-                                        try {
-                                            viewModel.setValue(it.replace(",", ".").toFloat())
-                                            textForDisplay = it
-                                        } catch (ex: Exception) {
-                                            ex.printStackTrace()
-                                        }
-                                    },
-                                    keyboardOptions = KeyboardOptions(
-                                        keyboardType = KeyboardType.Number
-                                    ),
-//                                textStyle = MaterialTheme.typography.h4,
-                                    modifier = Modifier.align(Alignment.Center),
-                                    visualTransformation = UnitVisualTransformation(state!!.paramUnit)
-                                )
-                            }
-                            Icon(
-                                modifier = Modifier
-                                    .padding(start = 8.dp, end = 32.dp)
-                                    .size(48.dp)
-                                    .clickable(onClick = viewModel::increaseCurrent),
-                                painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),
-                                contentDescription = null
+                                    .align(Alignment.Center),
+                                contentScale = ContentScale.FillBounds,
+                                painter = painterResource(id = paramConfig.image),
+                                contentDescription = null,
                             )
                         }
-
-                        Spacer(
-                            modifier = Modifier.weight(1f)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            config[state!!.currentParamKey]?.name ?: "NO_NAME",
+                            modifier = Modifier.align(Alignment.Center),
+                            style = MaterialTheme.typography.h4
                         )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
 
-                        Row(
+                        Icon(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.End
+                                .padding(start = 32.dp, end = 8.dp)
+                                .size(48.dp)
+                                .clickable(onClick = viewModel::decreaseCurrent),
+                            painter = painterResource(id = R.drawable.ic_baseline_remove_circle_outline_24),
+                            contentDescription = null // decorative element
+                        )
+                        Box(
+                            modifier = Modifier.weight(1f)
                         ) {
-                            if((state?.selectedStep ?: 0) != 0 ) {
-                                Button(onClick = viewModel::goToPrevious) {
-                                    Text("Poprzedni")
-                                }
-                                Spacer(modifier = Modifier.width(4.dp))
+
+                            var textForDisplay by remember(
+                                state!!.currentParamKey,
+                                state!!.currentValue
+                            ) {
+                                mutableStateOf(
+                                    state!!.currentValueText
+                                )
                             }
-                            Button(onClick = viewModel::goToNext) {
-                                Text(state?.nextButtonText ?: "")
+
+                            OutlinedTextField(
+                                textStyle = LocalTextStyle.current.copy(
+                                    textAlign = TextAlign.Center
+                                ),
+                                value = textForDisplay,
+                                onValueChange = {
+                                    try {
+                                        textForDisplay = it
+                                        viewModel.setValue(it)
+                                    } catch (ex: Exception) {
+                                        viewModel.lockNext()
+                                    }
+                                },
+
+                                keyboardOptions = KeyboardOptions(
+                                    keyboardType = KeyboardType.Number
+                                ),
+//                                textStyle = MaterialTheme.typography.h4,
+                                modifier = Modifier.align(Alignment.Center),
+                                visualTransformation = UnitVisualTransformation(state!!.paramUnit)
+                            )
+                        }
+                        Icon(
+                            modifier = Modifier
+                                .padding(start = 8.dp, end = 32.dp)
+                                .size(48.dp)
+                                .clickable(onClick = viewModel::increaseCurrent),
+                            painter = painterResource(id = R.drawable.ic_baseline_add_circle_outline_24),
+                            contentDescription = null
+                        )
+                    }
+
+                    Spacer(
+                        modifier = Modifier.weight(1f)
+                    )
+
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        if ((state?.selectedStep ?: 0) != 0) {
+                            Button(onClick = viewModel::goToPrevious) {
+                                Text("Poprzedni")
                             }
+                            Spacer(modifier = Modifier.width(4.dp))
+                        }
+                        Button(
+                            enabled = !(state?.invalidData ?: true),
+                            onClick = viewModel::goToNext,
+                        ) {
+                            Text(state?.nextButtonText ?: "")
                         }
                     }
                 }
+            }
 
         }
     }

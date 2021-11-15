@@ -5,15 +5,10 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.tommannson.bodystats.feature.configuration.ConfigurationScreen
-import com.tommannson.bodystats.feature.home.HomeDashboardScreen
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.tommannson.bodystats.feature.home.MainViewModel
-import com.tommannson.bodystats.feature.previewstats.PreviewStatsScreen
-import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
-import com.tommannson.bodystats.infrastructure.configuration.BODY_COMPOSITION_PARAMS
+import com.tommannson.bodystats.feature.navigation.Navigation
 import com.tommannson.bodystats.ui.theme.ApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,45 +22,10 @@ class MainActivity : AppCompatActivity() {
         vm = ViewModelProvider(this).get(MainViewModel::class.java)
         setContent {
             ApplicationTheme(useDarkColors = false) {
-
-                val navController = rememberNavController()
-
-                NavHost(
-                    navController = navController,
-                    startDestination = Screen.HomeScreen.route
-                ) {
-                    composable(Screen.HomeScreen.route) {
-                        HomeDashboardScreen(navController)
-                    }
-                    composable(Screen.ConfigurationScreen.route) {
-                        ConfigurationScreen(navController)
-                    }
-                    composable(Screen.CreateStatScreen.route) {
-                        CreateStatScreen(BASIC_PARAMS, navController)
-                    }
-                    composable(Screen.CreateBodyCompositionScreen.route) {
-                        CreateStatScreen(BODY_COMPOSITION_PARAMS, navController)
-                    }
-                    composable(Screen.PreviewScreen.route) {
-                        PreviewStatsScreen(navController)
-                    }
-                }
+                Navigation()
             }
         }
-//        vm.prepareScreen()
-
-
     }
 }
 
 
-sealed class Screen(val route: String) {
-
-    object HomeScreen : Screen("home")
-    object ConfigurationScreen : Screen("configuration")
-    object CreateStatScreen : Screen("create_stats")
-    object CreateBodyCompositionScreen : Screen("create_body_composition")
-    object PreviewScreen : Screen("preview_screen")
-
-
-}

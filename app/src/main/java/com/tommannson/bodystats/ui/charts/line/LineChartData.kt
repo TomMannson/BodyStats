@@ -50,7 +50,6 @@ data class LineChartData2D<T>(
     /** This is percentage we pad yValue by.**/
     val padBy: Float = 20f,
     val startAtZero: Boolean = false,
-
     val minY: Float = 0f,
     val maxY: Float = 0f,
     val minX: T,

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tommannson.bodystats">
 
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".feature.BodyStatsApplication"
         android:allowBackup="true"

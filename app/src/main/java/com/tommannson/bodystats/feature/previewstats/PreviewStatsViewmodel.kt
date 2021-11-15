@@ -2,8 +2,7 @@ package com.tommannson.bodystats.feature.previewstats
 
 import androidx.lifecycle.viewModelScope
 import com.tommannson.bodystats.base.BaseViewmodel
-import com.tommannson.bodystats.feature.home.ScreenState
-import com.tommannson.bodystats.infrastructure.configuration.FULL_LIST_OF_STATS
+import com.tommannson.bodystats.feature.configuration.ScreenState
 import com.tommannson.bodystats.infrastructure.configuration.SavedStats
 import com.tommannson.bodystats.infrastructure.configuration.StatsDao
 import com.tommannson.bodystats.infrastructure.configuration.UserDao
@@ -25,12 +24,12 @@ class PreviewStatsViewmodel
     val _state = MutableStateFlow(State(mapOf()))
     val state: StateFlow<State> = _state
 
-    fun initPreview() {
+    fun initPreview(listToDisplay: List<String> ) {
         viewModelScope.launch(Dispatchers.IO) {
             val user = userDao.getAll().firstOrNull()
 
             if (user != null) {
-                statsDao.getParamLive(user.id, FULL_LIST_OF_STATS).collect {
+                statsDao.getParamLive(user.id, listToDisplay).collect {
 
                     val groupedStats = mutableMapOf<String, MutableList<SavedStats>>()
 
