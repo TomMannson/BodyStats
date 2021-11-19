@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.home.sections
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -57,12 +58,12 @@ fun NewBodyCompositionStats(
                     Text("Pomiar", modifier = Modifier.weight(.35f))
                     Icon(
                         modifier = Modifier.weight(.2f),
-                        painter = painterResource(id = R.drawable.ic_baseline_import_export_24),
+                        painter = painterResource(id = R.drawable.ic_measuremnt_from_24),
                         contentDescription = null
                     )
                     Icon(
                         modifier = Modifier.weight(.2f),
-                        painter = painterResource(id = R.drawable.ic_baseline_import_export_24),
+                        painter = painterResource(id = R.drawable.ic_measurement_to_24),
                         contentDescription = null
                     )
                     Icon(
@@ -77,7 +78,7 @@ fun NewBodyCompositionStats(
                 Divider()
 
                 Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = 0.dp)
                 ) {
                     var expandedStat by remember { mutableStateOf(-1) }
 
@@ -94,12 +95,13 @@ fun NewBodyCompositionStats(
                                 modifier = Modifier
                                     .height(56.dp)
                                     .clickable {
-                                        if(expandedStat == index){
+                                        if (expandedStat == index) {
                                             expandedStat = -1
                                             return@clickable
                                         }
                                         expandedStat = index
-                                    },
+                                    }
+                                    .padding(horizontal = 16.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 val paramName =
@@ -135,7 +137,7 @@ fun NewBodyCompositionStats(
                                     } else if (previosValue < lastValue) {
                                         "↑ "
                                     } else {
-                                        ""
+                                        "  "
                                     }
 
                                     Text(
@@ -151,7 +153,7 @@ fun NewBodyCompositionStats(
                                     )
                                 } else {
                                     Text(
-                                        "0",
+                                        "0   ",
                                         modifier = Modifier
                                             .weight(.2f)
                                             .align(Alignment.CenterVertically),
@@ -159,21 +161,22 @@ fun NewBodyCompositionStats(
                                     )
                                 }
 
-                                val icon = if(expandedStat == index){
+                                val icon = if (expandedStat == index) {
                                     R.drawable.ic_baseline_keyboard_arrow_down_24
-                                }else{
+                                } else {
                                     R.drawable.ic_baseline_keyboard_arrow_up_24
                                 }
 
                                 Icon(
                                     modifier = Modifier.weight(.05f),
                                     painter = painterResource(id = icon),
+                                    tint = MaterialTheme.colors.primary,
                                     contentDescription = null
                                 )
 
                             }
                             StatDetail(
-                                expanded = (expandedStat == index),
+                                expand = (expandedStat == index),
                                 data = fullItemList.takeLast(10),
                                 paramToPresent = paramsToPresent[index]
                             )
@@ -186,87 +189,92 @@ fun NewBodyCompositionStats(
 }
 
 @Composable
-fun StatDetail(expanded: Boolean, data: List<SavedStats>, paramToPresent: String) {
-    if (expanded) {
-        Column() {
-            for (a in 0 until data.size) {
-                val index = (data.size - 1) - a
-                Row(
-                    modifier = Modifier.height(48.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    val paramName =
-                        data[index].submitedAt.toString()
+fun StatDetail(expand: Boolean, data: List<SavedStats>, paramToPresent: String) {
+    Crossfade(targetState = expand) { expanded ->
+        if (expanded) {
+            Column(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                for (a in 0 until data.size) {
+                    val index = (data.size - 1) - a
+                    Row(
+                        modifier = Modifier.height(48.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val paramName =
+                            data[index].submitedAt.toString()
 
-
-                    Text(
-                        paramName,
-                        modifier = Modifier.weight(.35f),
-                    )
-
-                    for (sampleIndex in index-1 until index + 1) {
-                        if(sampleIndex >= 0){
-                            val valueToPrint = data[sampleIndex].value
-                            Text(
-                                valueToPrint fmt getStatFormatter(paramToPresent),
-                                modifier = Modifier
-                                    .weight(.2f)
-                                    .align(Alignment.CenterVertically),
-                                textAlign = TextAlign.Center
-                            )
-                        } else {
-                            Text(
-                                "-",
-                                modifier = Modifier
-                                    .weight(.2f)
-                                    .align(Alignment.CenterVertically),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-
-                    }
-
-
-                    if (index > 0) {
-                        val lastValue = data[index].value
-                        val previosValue = data[index - 1].value
-
-                        val sign = if (previosValue > lastValue) {
-                            "\u2193 "
-                        } else if (previosValue < lastValue) {
-                            "↑ "
-                        } else {
-                            " "
-                        }
 
                         Text(
-                            "${
-                                Math.abs(previosValue - lastValue) fmt getStatFormatter(
-                                    paramToPresent
+                            paramName,
+                            modifier = Modifier.weight(.35f),
+                        )
+
+                        for (sampleIndex in index - 1 until index + 1) {
+                            if (sampleIndex >= 0) {
+                                val valueToPrint = data[sampleIndex].value
+                                Text(
+                                    valueToPrint fmt getStatFormatter(paramToPresent),
+                                    modifier = Modifier
+                                        .weight(.2f)
+                                        .align(Alignment.CenterVertically),
+                                    textAlign = TextAlign.Center
                                 )
-                            }${sign}",
-                            modifier = Modifier
-                                .weight(.2f)
-                                .align(Alignment.CenterVertically),
-                            textAlign = TextAlign.End
-                        )
-                    } else {
-                        Text(
-                            "0 ",
-                            modifier = Modifier
-                                .weight(.2f)
-                                .align(Alignment.CenterVertically),
-                            textAlign = TextAlign.End
-                        )
-                    }
+                            } else {
+                                Text(
+                                    "-",
+                                    modifier = Modifier
+                                        .weight(.2f)
+                                        .align(Alignment.CenterVertically),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
 
-                    Spacer(modifier = Modifier.weight(.05f),)
+                        }
+
+
+                        if (index > 0) {
+                            val lastValue = data[index].value
+                            val previosValue = data[index - 1].value
+
+                            val sign = if (previosValue > lastValue) {
+                                "\u2193 "
+                            } else if (previosValue < lastValue) {
+                                "↑ "
+                            } else {
+                                " "
+                            }
+
+                            Text(
+                                "${
+                                    Math.abs(previosValue - lastValue) fmt getStatFormatter(
+                                        paramToPresent
+                                    )
+                                }${sign}",
+                                modifier = Modifier
+                                    .weight(.2f)
+                                    .align(Alignment.CenterVertically),
+                                textAlign = TextAlign.End
+                            )
+                        } else {
+                            Text(
+                                "0 ",
+                                modifier = Modifier
+                                    .weight(.2f)
+                                    .align(Alignment.CenterVertically),
+                                textAlign = TextAlign.End
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.weight(.05f))
+                    }
                 }
             }
+        } else {
+            Spacer(modifier = Modifier)
         }
-    } else {
-        Spacer(modifier = Modifier)
     }
+
 }
 
 private infix fun Int.toward(to: Int): IntProgression {

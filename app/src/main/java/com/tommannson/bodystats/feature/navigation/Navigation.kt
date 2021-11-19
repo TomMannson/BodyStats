@@ -1,18 +1,17 @@
 package com.tommannson.bodystats.feature.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.feature.CreateStatScreen
 import com.tommannson.bodystats.feature.Screen
-import com.tommannson.bodystats.feature.camerascan.SimpleCameraPreview
 import com.tommannson.bodystats.feature.configuration.ConfigurationScreen
 import com.tommannson.bodystats.feature.home.HomeDashboardScreen
 import com.tommannson.bodystats.feature.previewstats.PreviewStatsScreen
 import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
+import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS_FOR_CREATE
 import com.tommannson.bodystats.infrastructure.configuration.BODY_COMPOSITION_PARAMS
 
 @Composable
@@ -30,7 +29,7 @@ fun Navigation(
             ConfigurationScreen(navController)
         }
         composable(Screen.CreateStatScreen.route) {
-            CreateStatScreen(BASIC_PARAMS, navController)
+            CreateStatScreen(BASIC_PARAMS_FOR_CREATE, navController)
         }
         composable(Screen.CreateBodyCompositionScreen.route) {
             CreateStatScreen(BODY_COMPOSITION_PARAMS, navController)
@@ -46,9 +45,6 @@ fun Navigation(
         }
         composable(Screen.PreviewScreen.route) {
             PreviewStatsScreen(navController)
-        }
-        composable(Screen.CameraScanScreen.route) {
-            SimpleCameraPreview()
         }
     }
 }

@@ -31,7 +31,7 @@ fun StepChangeButtons(
     ) {
         if ((state?.selectedStep ?: 0) != 0) {
             Button(onClick = onPrevious) {
-                Text("Poprzedni")
+                Text("Poprzedni".uppercase())
             }
             Spacer(modifier = Modifier.width(4.dp))
         }
@@ -39,7 +39,7 @@ fun StepChangeButtons(
             enabled = !(state?.invalidData ?: true),
             onClick = onNext,
         ) {
-            Text(state?.nextButtonText ?: "")
+            Text(state?.nextButtonText?.uppercase() ?: "")
         }
     }
 }

@@ -32,7 +32,7 @@ FROM applicationuser
     fun updateUser(user: ApplicationUser);
 
     @Insert
-    fun insertAll(vararg users: ApplicationUser)
+    fun insertAll(vararg users: ApplicationUser): List<Long>
 
     @Delete
     fun delete(user: ApplicationUser)
@@ -86,13 +86,14 @@ ORDER BY submitted_at
     @Query(
         """SELECT *
 FROM savedstats
-WHERE owner_id=:owner AND stat_name IN(:statsNames)
+WHERE owner_id=:owner AND stat_name IN(:statsNames) AND submitted_at >= :date
 ORDER BY submitted_at ASC
     """
     )
     fun getParamLive(
         owner: Long,
-        statsNames: List<String>
+        statsNames: List<String>,
+        date: LocalDate = LocalDate.now().minusYears(10)
     ): Flow<List<SavedStats>>
 
     @Insert

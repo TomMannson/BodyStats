@@ -80,7 +80,9 @@ data class LineChartData2D<T>(
                 yMinMax.first - ((yMinMax.second - yMinMax.first) * padBy / 100f)
             }
         }
-    internal val yRange = maxYValue - minYValue
+    internal val yRange = if (maxYValue != minYValue) maxYValue - minYValue else {
+        maxY - minY
+    }
 
     private val xMinMax: Pair<Float, Float>
         get() {

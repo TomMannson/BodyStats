@@ -17,12 +17,10 @@ import com.github.tehras.charts.piechart.utils.toLegacyInt
 import kotlin.math.max
 import kotlin.math.roundToInt
 
-typealias LabelFormatter = (value: Float) -> String
 
-class SimpleYAxisDrawer(
+class GridYAxisDrawer(
   private val labelTextSize: TextUnit = 12.sp,
   private val labelTextColor: Color = Color.Black,
-  private val labelRatio: Int = 3,
   private val labelValueFormatter: LabelFormatter = { value -> "%.1f".format(value) },
   private val axisLineThickness: Dp = 1.dp,
   private val axisLineColor: Color = Color.Black
@@ -73,9 +71,8 @@ class SimpleYAxisDrawer(
       textSize = labelTextSize.toPx()
       textAlign = android.graphics.Paint.Align.RIGHT
     }
-    val minLabelHeight = (labelTextSize.toPx() * labelRatio.toFloat())
     val totalHeight = drawableArea.height
-    val labelCount = max((drawableArea.height / minLabelHeight).roundToInt(), 2)
+    val labelCount = 4
 
     for (i in 0..labelCount) {
       var value = minValue + (i * ((maxValue - minValue) / labelCount))
@@ -96,6 +93,13 @@ class SimpleYAxisDrawer(
         drawableArea.bottom - (i * (totalHeight / labelCount)) + (textBounds.height() / 2f)
 
       canvas.nativeCanvas.drawText(label, x, y, labelPaint)
+    }
+
+    for (i in 0..labelCount) {
+      val y =
+        drawableArea.bottom - (i * (totalHeight / labelCount))
+
+      canvas.nativeCanvas.drawLine(drawableArea.width, y, canvas.nativeCanvas.width.toFloat() - drawableArea.width - 14.dp.toPx() , y, textPaint)
     }
   }
 }

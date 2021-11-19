@@ -67,7 +67,7 @@ private fun Image(
             androidx.compose.foundation.Image(
                 modifier = Modifier
                     .align(Alignment.Center),
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.FillWidth,
                 painter = painterResource(id = paramConfig.image),
                 contentDescription = null,
             )

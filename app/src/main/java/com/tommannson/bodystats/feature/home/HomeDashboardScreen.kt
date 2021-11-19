@@ -23,6 +23,7 @@ import com.tommannson.bodystats.feature.home.sections.OnBoardSection
 import com.tommannson.bodystats.feature.home.sections.TopBar
 import com.tommannson.bodystats.infrastructure.configuration.FULL_LIST_OF_STATS
 
+
 @Composable
 fun HomeDashboardScreen(navController: NavController) {
     val scafoldState = rememberScaffoldState();

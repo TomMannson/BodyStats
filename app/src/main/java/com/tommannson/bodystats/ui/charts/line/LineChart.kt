@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import com.github.tehras.charts.line.LineChartUtils.calculateDrawableArea
 import com.github.tehras.charts.line.LineChartUtils.calculateFillPath
@@ -37,7 +38,7 @@ fun <T> LineChart(
   pointDrawer: PointDrawer = FilledCircularPointDrawer(),
   lineDrawer: LineDrawer = SolidLineDrawer(),
   lineShader: LineShader = NoLineShader,
-  xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer(),
+  xAxisDrawer: XAxisDrawer = SimpleXAxisDrawer<T>(),
   yAxisDrawer: YAxisDrawer = SimpleYAxisDrawer(),
   horizontalOffset: Float = 5f
 ) {
@@ -123,6 +124,7 @@ fun <T> LineChart(
       )
 
       xAxisDrawer.drawAxisLabels(
+        lineChartData as LineChartData2D<Any>,
         drawScope = this,
         canvas = canvas,
         drawableArea = xAxisLabelsDrawableArea,
@@ -139,6 +141,7 @@ fun <T> LineChart(
       yAxisDrawer.drawAxisLabels(
         drawScope = this,
         canvas = canvas,
+        lineChartData as LineChartData2D<Any>,
         drawableArea = yAxisDrawableArea,
         minValue = lineChartData.minYValue,
         maxValue = lineChartData.maxYValue

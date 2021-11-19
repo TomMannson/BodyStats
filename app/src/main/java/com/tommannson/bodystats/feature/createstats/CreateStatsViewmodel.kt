@@ -182,7 +182,7 @@ data class State(
     val currentValueText get() = currentValue fmt formatter
     val currentParamKey get() = orderOfItemsToSave[selectedStep]
     val paramUnit get() = getStatUnit(currentParamKey)
-    val formatter get() = getStatFormatter(currentParamKey)
+    val formatter get() = getStatFormatterModification(currentParamKey)
     val nextButtonText get() = if (selectedStep < orderOfItemsToSave.size - 1) "Następny" else "Zakończ"
 }
 
@@ -223,6 +223,11 @@ fun getStatShift(stat: String) = when (stat) {
 }
 
 fun getStatFormatter(stat: String) = when (stat) {
+    in listOf(Statistic.BMR, Statistic.METABOLIC_AGE, Statistic.VISCELAR_FAT_RATING) -> "#"
+    else -> "#.#"
+}
+
+fun getStatFormatterModification(stat: String) = when (stat) {
     in listOf(Statistic.BMR, Statistic.METABOLIC_AGE, Statistic.VISCELAR_FAT_RATING) -> "#"
     else -> "#.#"
 }

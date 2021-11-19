@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.configuration
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -22,6 +24,7 @@ import com.tommannson.bodystats.feature.configuration.widgets.IconTextField
 import com.tommannson.bodystats.feature.configuration.widgets.SenderSelector
 import com.tommannson.bodystats.infrastructure.configuration.Gender
 import com.tommannson.bodystats.utils.fmt
+import kotlinx.coroutines.flow.collect
 
 @Composable
 fun ConfigurationScreen(navController: NavHostController) {
@@ -46,11 +49,19 @@ fun ConfigurationScreen(navController: NavHostController) {
     ) {
 
         val viewmodel: ConfigurationViewModel = hiltViewModel()
-
+        val context = LocalContext.current
         val screenState by viewmodel.configurationState.observeAsState()
 
         LaunchedEffect(key1 = viewmodel) {
             viewmodel.initializeScreen()
+            viewmodel.events.collect {
+                when (it) {
+                    is Events.Error -> Toast.makeText(context, it.message, Toast.LENGTH_SHORT)
+                        .show()
+                    is Events.Created -> navController.popBackStack()
+                }
+
+            }
         }
 
         val localState = screenState
@@ -64,7 +75,7 @@ fun ConfigurationScreen(navController: NavHostController) {
                 mutableStateOf(localState.applicationUser?.name ?: "")
             }
             var heightState by remember {
-                mutableStateOf(localState.applicationUser?.height fmt "#" )
+                mutableStateOf(localState.applicationUser?.height fmt "#")
             }
             var weightState by remember {
                 mutableStateOf(localState.applicationUser?.weight fmt "#.#")
@@ -120,7 +131,7 @@ fun ConfigurationScreen(navController: NavHostController) {
                 IconTextField(
                     value = weightState,
                     label = "Waga (kg)",
-                    iconPainter = painterResource(id = R.drawable.ic_baseline_face_24),
+                    iconPainter = painterResource(id = R.drawable.ic_baseline_scale_24),
                     onValueChange = {
                         weightState = it
                     },
@@ -133,12 +144,15 @@ fun ConfigurationScreen(navController: NavHostController) {
                     dreamGenderState = it
                 }
 
-                Text("Powiedz nam także jak twoim zdaniem powinna wyglądać twoja wymażona waga", modifier = Modifier.padding(16.dp))
+                Text(
+                    "Powiedz nam także, jaka jest Twoja waga marzeń?",
+                    modifier = Modifier.padding(16.dp)
+                )
 
                 IconTextField(
                     value = dreamWeightState,
                     label = "Waga marzeń (kg)",
-                    iconPainter = painterResource(id = R.drawable.ic_baseline_auto_awesome_24),
+                    iconPainter = painterResource(id = R.drawable.ic_baseline_emoji_events_24),
                     onValueChange = {
                         dreamWeightState = it
                     },
@@ -163,15 +177,13 @@ fun ConfigurationScreen(navController: NavHostController) {
 
                         viewmodel.submit(
                             name = nameState,
-                            height = heightState.replace(",", ".").toFloat(),
-                            weight = weightState.replace(",", ".").toFloat(),
-                            dreamWeight = dreamWeightState.replace(",", ".").toFloat(),
+                            height = heightState.replace(",", "."),
+                            weight = weightState.replace(",", "."),
+                            dreamWeight = dreamWeightState.replace(",", "."),
                             gender = dreamGenderState
                         )
-
-                        navController.popBackStack()
                     }) {
-                    Text("Zatwierdź")
+                    Text("Zatwierdź".uppercase())
                 }
             }
         }

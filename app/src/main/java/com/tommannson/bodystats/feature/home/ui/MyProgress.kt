@@ -91,14 +91,16 @@ fun calculateProgressPosition(start: Float, end: Float, current: Float) =
        } else {
            ((start - end) - (current - end)) / (start - end)
        }
-    } else {
-        if(current < start){
-            1f;
+    } else if((start < end)) {
+        if(current <= start){
+            0f;
         } else if(current > end){
-            0f
+            1f
         } else {
             (current - start) / (end - start)
         }
+    } else {
+        1f
     }
 
 
@@ -107,4 +109,12 @@ fun calculateProgressPosition(start: Float, end: Float, current: Float) =
 @Composable
 fun PreviewProgress() {
     MyProgress(10f, 50f, 35f)
+}
+
+fun Float.arrowDirectionAtSign() =  if (this < 0) {
+    "\u2193"
+} else if (this > 0) {
+    "↑"
+} else {
+    ""
 }

@@ -7,10 +7,8 @@ import com.tommannson.bodystats.infrastructure.configuration.*
 import com.tommannson.bodystats.utils.fmt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import java.math.BigDecimal
@@ -26,6 +24,7 @@ class HomeViewModel
 
     private val _state = MutableStateFlow<HomeState>(HomeState.Init)
     val state: StateFlow<HomeState> = _state.asStateFlow()
+    var subscription: Job? = null
 
     fun initialiseData(statsToInit: List<String>) {
 
@@ -38,13 +37,15 @@ class HomeViewModel
                 _state.value = HomeState.NoData
                 return@launch
             }
+            val pointOfQuery = LocalDate.now().minusDays(60)
+            subscription?.cancel()
+            subscription = statsDao.getParamLive(user.id!!, statsToInit, pointOfQuery)
+                .onEach {
 
-            statsDao.getParamLive(user.id, statsToInit).collect {
-                val savedStats = statsDao.getParams(user.id, statsToInit)
 
                 val groupedStats = mutableMapOf<String, MutableList<SavedStats>>()
 
-                for (statItem in savedStats) {
+                for (statItem in it) {
                     val foundList = groupedStats[statItem.statName] ?: mutableListOf()
                     foundList.add(statItem)
                     groupedStats[statItem.statName] = foundList
@@ -67,7 +68,7 @@ class HomeViewModel
                     groupedStats,
                     loadedWeightInfo
                 )
-            }
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -76,7 +77,7 @@ class HomeViewModel
             val user = userDao.getAll().firstOrNull() as ApplicationUser
             val operationTime = LocalDate.now()
             val foundWeight =
-                statsDao.getParamInfo(user.id, operationTime, listOf(Statistic.WEIGHT))
+                statsDao.getParamInfo(user.id!!, operationTime, listOf(Statistic.WEIGHT))
 
             if (foundWeight != null) {
                 val foundValue = foundWeight.value
@@ -85,7 +86,7 @@ class HomeViewModel
             } else {
                 val calculatedValue = BigDecimal(user.weight.toDouble()).subtract(BigDecimal(.1))
                 val newStatsValue =
-                    SavedStats(Statistic.WEIGHT, calculatedValue.toFloat(), operationTime, user.id)
+                    SavedStats(Statistic.WEIGHT, calculatedValue.toFloat(), operationTime, user.id!!)
                 statsDao.createNewStats(listOf(newStatsValue))
             }
         }
@@ -96,7 +97,7 @@ class HomeViewModel
             val user = userDao.getAll().firstOrNull() as ApplicationUser
             val operationTime = LocalDate.now()
             val foundWeight =
-                statsDao.getParamInfo(user.id, operationTime, listOf(Statistic.WEIGHT))
+                statsDao.getParamInfo(user.id!!, operationTime, listOf(Statistic.WEIGHT))
 
             if (foundWeight != null) {
                 val foundValue = foundWeight.value
@@ -105,7 +106,7 @@ class HomeViewModel
             } else {
                 val calculatedValue = BigDecimal(user.weight.toDouble()).add(BigDecimal(.1))
                 val newStatsValue =
-                    SavedStats(Statistic.WEIGHT, calculatedValue.toFloat(), operationTime, user.id)
+                    SavedStats(Statistic.WEIGHT, calculatedValue.toFloat(), operationTime, user.id!!)
                 statsDao.createNewStats(listOf(newStatsValue))
             }
         }

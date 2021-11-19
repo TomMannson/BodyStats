@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -17,7 +18,7 @@ import com.github.tehras.charts.line.LineChartData2D
 import com.github.tehras.charts.line.LineChartData2D.Point
 import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
 import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
-import com.github.tehras.charts.line.renderer.xaxis.SimpleXAxisDrawer
+import com.github.tehras.charts.line.renderer.xaxis.DefinedXAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.Screen
@@ -28,6 +29,13 @@ import com.tommannson.bodystats.infrastructure.configuration.SavedStats
 import com.tommannson.bodystats.infrastructure.configuration.Statistic
 import com.tommannson.bodystats.utils.fmt
 import org.threeten.bp.LocalDate
+import kotlin.math.absoluteValue
+
+
+val listOfDates: List<LocalDate> = (0 until 5).map {
+    return@map LocalDate.now().minusDays(15L * it)
+}.reversed()
+
 
 @Composable
 fun MyCharts(
@@ -88,8 +96,8 @@ fun TryChart(list: List<Point<LocalDate>>) {
             points = list,
             converter = { it.toEpochDay().toFloat() },
             displayX = { "${it.dayOfMonth} ${it.monthValue}" },
-            minX = LocalDate.now().minusDays(10),
-            maxX = LocalDate.now().plusDays(10),
+            minX = LocalDate.now().minusDays(60),
+            maxX = LocalDate.now(),
         ),
         // Optional properties.
         modifier = Modifier.fillMaxSize(),
@@ -99,11 +107,13 @@ fun TryChart(list: List<Point<LocalDate>>) {
         ),
         lineDrawer = SolidLineDrawer(
             color = Color.LightGray,
-            thickness = 2.dp
+            thickness = 1.dp
         ),
-        xAxisDrawer = SimpleXAxisDrawer(),
+        xAxisDrawer = DefinedXAxisDrawer(
+            chartLabels = listOfDates
+        ),
         yAxisDrawer = SimpleYAxisDrawer(),
-        horizontalOffset = 5f
+        horizontalOffset = 0f
     )
 }
 
@@ -117,11 +127,6 @@ fun SimpleChart(
     if (data.isEmpty()) {
         Text("Brak danych do wyświetlenia wykresu: $chartName", modifier = Modifier.padding(16.dp))
     } else {
-        val dataTodisplay = mutableListOf<SavedStats>()
-        dataTodisplay.addAll(data)
-        if (data.size == 1) {
-            dataTodisplay.add(0, data.first())
-        }
 
         val firstItem = data.first()
         val lastItem = data.last()
@@ -129,20 +134,20 @@ fun SimpleChart(
         Box(
             modifier = Modifier.clickable(onClick = onChartClicked)
         ) {
+            val sign = differenceFromStart.arrowDirectionAtSign()
+            val formated = differenceFromStart.absoluteValue fmt getStatFormatter(typeOfdata)
+            val unit = getStatUnit(typeOfdata)
             SimpleChart(
                 chartName = chartName,
-                date = lastItem.submitedAt.toString(),
-                difference = "${differenceFromStart fmt getStatFormatter(typeOfdata)} ${
-                    getStatUnit(
-                        typeOfdata
-                    )
-                }",
-                savedStats = dataTodisplay
+                date = firstItem.submitedAt.toString(),
+                difference = "$formated$sign $unit",
+                savedStats = data
             )
         }
-
     }
+
 }
+
 
 @Composable
 fun SimpleChart(
@@ -167,9 +172,13 @@ fun SimpleChart(
             ) {
                 Text(chartName, style = MaterialTheme.typography.h6)
                 Spacer(modifier = Modifier.height(4.dp))
+                Text("Od startu", style = MaterialTheme.typography.body2)
                 Text(date, style = MaterialTheme.typography.body2)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(difference, color = Color.Green, style = MaterialTheme.typography.body2)
+                Text(
+                    difference,
+                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
+                )
             }
             Box(modifier = Modifier.weight(1.3f)) {
 //                    Chart()

@@ -9,6 +9,7 @@ import com.tommannson.bodystats.infrastructure.configuration.Statistic.HIPS_STAT
 import com.tommannson.bodystats.infrastructure.configuration.Statistic.THIGH_STATISTIC
 import com.tommannson.bodystats.infrastructure.configuration.Statistic.WAIST_STATISTIC
 import com.tommannson.bodystats.infrastructure.configuration.Statistic.WEIGHT
+import org.jetbrains.annotations.NotNull
 import org.threeten.bp.LocalDate
 
 @Entity
@@ -59,6 +60,16 @@ object Statistic {
 
 val BASIC_PARAMS = listOf(
     WEIGHT,
+    BUST_STATISTIC,
+    ARM_STATISTIC,
+    WAIST_STATISTIC,
+    BELLY_STATISTIC,
+    HIPS_STATISTIC,
+    THIGH_STATISTIC, //udo
+    CALF_STATISTIC
+)
+
+val BASIC_PARAMS_FOR_CREATE = listOf(
     BUST_STATISTIC,
     ARM_STATISTIC,
     WAIST_STATISTIC,
