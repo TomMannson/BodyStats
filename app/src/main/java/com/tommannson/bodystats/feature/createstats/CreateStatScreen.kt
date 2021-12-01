@@ -24,6 +24,7 @@ import com.tommannson.bodystats.feature.createstats.sections.StepChangeButtons
 import com.tommannson.bodystats.feature.createstats.sections.StepInfo
 import com.tommannson.bodystats.feature.createstats.sections.Stepper
 import com.tommannson.bodystats.feature.createstats.sections.ValueInput
+import com.tommannson.bodystats.ui.controls.Progress
 
 
 @Composable
@@ -37,7 +38,7 @@ fun CreateStatScreen(dataToCreate: List<String>, navController: NavController) {
     val state by viewModel.state.observeAsState()
 
     if (state == null || state?.viewStateMachine == ScreenState.Init) {
-
+        Progress()
     } else {
         Column(
             Modifier

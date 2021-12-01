@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.createstats.model.Configurations.PARAMS_UI_MAP
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
+import com.tommannson.bodystats.infrastructure.SavedStats
 import org.threeten.bp.LocalDate
 
 @Composable

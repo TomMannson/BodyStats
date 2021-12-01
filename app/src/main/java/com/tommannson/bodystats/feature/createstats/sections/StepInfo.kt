@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.tommannson.bodystats.feature.createstats.State
 import com.tommannson.bodystats.feature.createstats.model.Configuration
 import com.tommannson.bodystats.feature.createstats.model.Configurations
-import com.tommannson.bodystats.infrastructure.configuration.Statistic
+import com.tommannson.bodystats.model.statistics.Statistic
 
 @Preview
 @Composable

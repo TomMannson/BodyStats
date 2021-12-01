@@ -21,7 +21,7 @@ import com.tommannson.bodystats.feature.home.sections.LoadedData
 import com.tommannson.bodystats.feature.home.sections.Loading
 import com.tommannson.bodystats.feature.home.sections.OnBoardSection
 import com.tommannson.bodystats.feature.home.sections.TopBar
-import com.tommannson.bodystats.infrastructure.configuration.FULL_LIST_OF_STATS
+import com.tommannson.bodystats.model.statistics.FULL_LIST_OF_STATS
 
 
 @Composable

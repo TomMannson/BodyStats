@@ -14,8 +14,8 @@ android {
         applicationId "com.tommannson.bodystats"
         minSdk 24
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -76,10 +76,11 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     def lifecycle_version = "2.3.1"
     def compose_version = "1.0.5"
-    def room_version = "2.3.0"
+    def room_version = "2.4.0-beta02"
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.30")
     implementation 'com.jakewharton.threetenabp:threetenabp:1.3.1'
     implementation "com.google.accompanist:accompanist-pager:0.21.0-beta"
+    implementation "io.github.vanpra.compose-material-dialogs:datetime:0.6.1"
 
     //JETPACK COMPONENT
     implementation 'androidx.core:core-ktx:1.6.0'

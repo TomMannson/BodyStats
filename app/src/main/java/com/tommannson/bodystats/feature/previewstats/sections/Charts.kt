@@ -19,7 +19,7 @@ import com.github.tehras.charts.line.renderer.yaxis.PrescaledGridYAxisDrawer
 import com.tommannson.bodystats.feature.home.sections.listOfDates
 import com.tommannson.bodystats.feature.previewstats.MonthGridData
 import com.tommannson.bodystats.feature.previewstats.WeekGridData
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
+import com.tommannson.bodystats.infrastructure.SavedStats
 import org.threeten.bp.LocalDate
 
 @Composable

@@ -18,15 +18,5 @@ class MyComposeTest {
 
     @Test
     fun MyTest() {
-        // Start the app
-        composeTestRule.setContent {
-            ApplicationTheme(useDarkColors = false) {
-                HomeDashboardScreen(navController = )
-            }
-        }
-
-        composeTestRule.onNodeWithText("Continue").performClick()
-
-        composeTestRule.onNodeWithText("Welcome").assertIsDisplayed()
     }
 }

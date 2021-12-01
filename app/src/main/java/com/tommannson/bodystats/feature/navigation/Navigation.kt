@@ -10,9 +10,9 @@ import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.configuration.ConfigurationScreen
 import com.tommannson.bodystats.feature.home.HomeDashboardScreen
 import com.tommannson.bodystats.feature.previewstats.PreviewStatsScreen
-import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
-import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS_FOR_CREATE
-import com.tommannson.bodystats.infrastructure.configuration.BODY_COMPOSITION_PARAMS
+import com.tommannson.bodystats.feature.reminders.Reminders
+import com.tommannson.bodystats.model.statistics.BASIC_PARAMS_FOR_CREATE
+import com.tommannson.bodystats.model.statistics.BODY_COMPOSITION_PARAMS
 
 @Composable
 fun Navigation(

@@ -1,6 +1,7 @@
 package com.tommannson.bodystats.model.paramrecalculation
 
-import com.tommannson.bodystats.infrastructure.configuration.ApplicationUser
+import com.tommannson.bodystats.infrastructure.ApplicationUser
+
 
 interface Recalculator {
 

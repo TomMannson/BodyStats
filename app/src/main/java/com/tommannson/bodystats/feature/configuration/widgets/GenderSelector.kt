@@ -15,10 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.tommannson.bodystats.R
-import com.tommannson.bodystats.infrastructure.configuration.Gender
+import com.tommannson.bodystats.infrastructure.Gender
+
 
 @Composable
-fun SenderSelector(value: Int, onGenderSelected: (Int) -> Unit) {
+fun GenderSelector(value: Int, onGenderSelected: (Int) -> Unit) {
     Row {
         Box(
             modifier = Modifier

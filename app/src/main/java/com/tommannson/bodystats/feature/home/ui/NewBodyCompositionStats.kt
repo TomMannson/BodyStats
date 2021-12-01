@@ -13,9 +13,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tommannson.bodystats.R
-import com.tommannson.bodystats.feature.createstats.getStatFormatter
+import com.tommannson.bodystats.model.statistics.getStatFormatter
 import com.tommannson.bodystats.feature.createstats.model.Configurations
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
+import com.tommannson.bodystats.infrastructure.SavedStats
 import com.tommannson.bodystats.utils.fmt
 
 @Composable

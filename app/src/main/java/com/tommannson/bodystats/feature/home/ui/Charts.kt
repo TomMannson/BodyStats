@@ -22,11 +22,11 @@ import com.github.tehras.charts.line.renderer.xaxis.DefinedXAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.Screen
-import com.tommannson.bodystats.feature.createstats.getStatFormatter
-import com.tommannson.bodystats.feature.createstats.getStatUnit
+import com.tommannson.bodystats.model.statistics.getStatFormatter
+import com.tommannson.bodystats.model.statistics.getStatUnit
 import com.tommannson.bodystats.feature.createstats.model.Configurations.PARAMS_UI_MAP
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
-import com.tommannson.bodystats.infrastructure.configuration.Statistic
+import com.tommannson.bodystats.infrastructure.SavedStats
+import com.tommannson.bodystats.model.statistics.Statistic
 import com.tommannson.bodystats.utils.fmt
 import org.threeten.bp.LocalDate
 import kotlin.math.absoluteValue

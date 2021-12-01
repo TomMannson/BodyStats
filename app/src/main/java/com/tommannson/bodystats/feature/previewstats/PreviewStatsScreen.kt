@@ -6,8 +6,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,7 +15,7 @@ import com.tommannson.bodystats.feature.createstats.model.Configurations
 import com.tommannson.bodystats.feature.previewstats.sections.*
 import com.tommannson.bodystats.feature.previewstats.ui.PagableTabLayout
 import com.tommannson.bodystats.feature.previewstats.ui.rememberPreviewScreenState
-import com.tommannson.bodystats.infrastructure.configuration.BASIC_PARAMS
+import com.tommannson.bodystats.model.statistics.BASIC_PARAMS
 import org.threeten.bp.format.DateTimeFormatter
 
 @OptIn(ExperimentalPagerApi::class)

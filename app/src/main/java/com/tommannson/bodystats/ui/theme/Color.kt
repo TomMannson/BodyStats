@@ -12,6 +12,7 @@ private val Slate800 = Color(0xFFf44336)
 
 private val Orange500 = Color(0xFFF9AA33)
 private val Orange700 = Color(0xFFC78522)
+private val Gray = Color(0x55555555)
 
 val AppLightColors = lightColors(
     primary = Slate800,
@@ -27,11 +28,13 @@ val AppDarkColors = darkColors(
     onPrimary = Color.Black,
     secondary = Orange500,
     onSecondary = Color.Black,
-).withBrandedSurface()
+).withBrandedSurface
 
-fun Colors.withBrandedSurface() = copy(
+val Colors.withBrandedSurface get() = copy(
     surface = primary.copy(alpha = 0.08f).compositeOver(this.surface),
 )
+
+val Colors.veryLightGray get() = Color.LightGray.copy(alpha = .3f)
 
 val Colors.lighPrimary: Color
     get() = Slate200

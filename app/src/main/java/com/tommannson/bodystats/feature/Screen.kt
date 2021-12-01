@@ -20,5 +20,6 @@ sealed class Screen(val route: String) {
     }
 
     object CameraScanScreen : Screen("camera_scan")
+    object RemindersScreen : Screen("reminders_screen")
 
 }

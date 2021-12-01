@@ -1,22 +1,12 @@
 package com.tommannson.bodystats.infrastructure.configuration
 
 import androidx.room.*
+import com.tommannson.bodystats.infrastructure.ApplicationUser
+//import com.tommannson.bodystats.infrastructure.ReminderType
+import com.tommannson.bodystats.infrastructure.SavedStats
+//import com.tommannson.bodystats.infrastructure.UserReminder
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.LocalDate
-
-//@Dao
-//interface ConfigDao {
-//
-//    @Query("SELECT * FROM savedstatsconfiguration")
-//    fun getAll(): List<SavedStatsConfiguration>
-//
-//    @Insert
-//    fun insertAll(vararg users: SavedStatsConfiguration)
-//
-//    @Delete
-//    fun delete(user: SavedStatsConfiguration)
-//
-//}
 
 @Dao
 interface UserDao {
@@ -101,7 +91,16 @@ ORDER BY submitted_at ASC
 
     @Update
     fun udateStats(itemsToCreate: List<SavedStats>)
-
-
 }
-
+//
+//@Dao
+//interface ReminderDao {
+//    @Query(
+//        """SELECT *
+//FROM user_reminder
+//WHERE owner_id=:owner AND reminder_type=:type
+//"""
+//    )
+//    suspend fun getParamsForDate(owner: Long, type: ReminderType): UserReminder
+//}
+//

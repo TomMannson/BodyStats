@@ -2,7 +2,7 @@ package com.tommannson.bodystats.feature.previewstats
 
 import androidx.lifecycle.viewModelScope
 import com.tommannson.bodystats.base.BaseViewmodel
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
+import com.tommannson.bodystats.infrastructure.SavedStats
 import com.tommannson.bodystats.infrastructure.configuration.StatsDao
 import com.tommannson.bodystats.infrastructure.configuration.UserDao
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.home.HomeState
 import com.tommannson.bodystats.feature.home.HomeViewModel
-import com.tommannson.bodystats.infrastructure.configuration.BODY_COMPOSITION_PARAMS
+import com.tommannson.bodystats.model.statistics.BODY_COMPOSITION_PARAMS
 
 @Composable
 fun TopBar() {

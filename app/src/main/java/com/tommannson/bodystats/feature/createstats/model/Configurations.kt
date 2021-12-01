@@ -1,7 +1,7 @@
 package com.tommannson.bodystats.feature.createstats.model
 
 import com.tommannson.bodystats.R
-import com.tommannson.bodystats.infrastructure.configuration.Statistic
+import com.tommannson.bodystats.model.statistics.Statistic
 
 data class Configuration(val name: String, val image: Int, val shortName: String = "")
 

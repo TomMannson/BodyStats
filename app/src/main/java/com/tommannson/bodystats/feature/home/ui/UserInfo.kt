@@ -21,8 +21,8 @@ import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.home.WeightInfo
-import com.tommannson.bodystats.infrastructure.configuration.ApplicationUser
-import com.tommannson.bodystats.infrastructure.configuration.Gender
+import com.tommannson.bodystats.infrastructure.ApplicationUser
+import com.tommannson.bodystats.infrastructure.Gender
 import com.tommannson.bodystats.utils.fmt
 
 @Composable

@@ -11,11 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tommannson.bodystats.feature.createstats.getStatFormatter
-import com.tommannson.bodystats.feature.createstats.getStatUnit
+import com.tommannson.bodystats.model.statistics.getStatFormatter
+import com.tommannson.bodystats.model.statistics.getStatUnit
 import com.tommannson.bodystats.feature.previewstats.MonthOfYear
 import com.tommannson.bodystats.feature.previewstats.WeekScope
-import com.tommannson.bodystats.infrastructure.configuration.SavedStats
+import com.tommannson.bodystats.infrastructure.SavedStats
 import com.tommannson.bodystats.utils.fmt
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.TextStyle

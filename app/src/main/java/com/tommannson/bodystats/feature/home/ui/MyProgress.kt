@@ -8,15 +8,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tommannson.bodystats.feature.createstats.getStatFormatter
-import com.tommannson.bodystats.infrastructure.configuration.Statistic
+import com.tommannson.bodystats.model.statistics.getStatFormatter
+import com.tommannson.bodystats.model.statistics.Statistic
 import com.tommannson.bodystats.utils.fmt
 
 @Composable
