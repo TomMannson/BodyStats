@@ -1,12 +1,15 @@
 package com.tommannson.bodystats.infrastructure.configuration
 
+//import com.tommannson.bodystats.infrastructure.ReminderType
+//import com.tommannson.bodystats.infrastructure.UserReminder
 import androidx.room.*
 import com.tommannson.bodystats.infrastructure.ApplicationUser
-//import com.tommannson.bodystats.infrastructure.ReminderType
+import com.tommannson.bodystats.infrastructure.ReminderDefinition
+import com.tommannson.bodystats.infrastructure.ReminderInstance
 import com.tommannson.bodystats.infrastructure.SavedStats
-//import com.tommannson.bodystats.infrastructure.UserReminder
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 
 @Dao
 interface UserDao {
@@ -92,15 +95,71 @@ ORDER BY submitted_at ASC
     @Update
     fun udateStats(itemsToCreate: List<SavedStats>)
 }
-//
-//@Dao
-//interface ReminderDao {
-//    @Query(
-//        """SELECT *
-//FROM user_reminder
-//WHERE owner_id=:owner AND reminder_type=:type
-//"""
-//    )
-//    suspend fun getParamsForDate(owner: Long, type: ReminderType): UserReminder
-//}
-//
+
+@Dao
+interface ReminderDao {
+    @Query(
+        """SELECT *
+                    FROM reminder_definition
+                    WHERE owner_id=:owner """
+    )
+    fun getRemindersForOwner(owner: Long): Flow<List<ReminderDefinition>>
+
+    @Query(
+        """SELECT *
+                    FROM reminder_definition
+                    WHERE owner_id=:owner AND reminder_type=:type """
+    )
+    suspend fun getReminderByOwnerAndType(
+        owner: Long,
+        type: String
+    ): ReminderDefinition?
+
+    @Query(
+        """SELECT r_i.id, r_i.reminder_day, r_i.reminder_id, r_i.reminder_type, r_i.created_at
+                    FROM reminder_instance as r_i
+                    JOIN reminder_definition as r_o ON r_i.reminder_id=r_o.id
+                    WHERE r_o.owner_id=:owner AND r_o.enabled=1  AND r_i.reminder_day>:greaterThen
+                    ORDER BY r_i.reminder_day
+                    LIMIT 1
+                    """
+    )
+    fun findEnabledReminderInstancesByOwnerWhichWillTriggerAfter(
+        owner: Long,
+        greaterThen: LocalDateTime
+    ): List<ReminderInstance>
+
+    @Query(
+        """SELECT r_i.id, r_i.reminder_day, r_i.reminder_id, r_i.reminder_type, r_i.created_at
+                    FROM reminder_instance as r_i
+                    JOIN reminder_definition as r_o ON r_i.reminder_id=r_o.id
+                    WHERE r_o.owner_id=:owner AND r_o.enabled=1  AND r_i.reminder_day=:greaterThen
+                    ORDER BY r_i.reminder_day
+                    """
+    )
+    fun findAllEnabledReminderInstancesByOwnerWithSpecificTime(
+        owner: Long,
+        greaterThen: LocalDateTime
+    ): List<ReminderInstance>
+
+
+    @Insert
+    fun create(reminderDefinition: ReminderDefinition): Long
+
+    @Update
+    fun update(reminderDefinition: ReminderDefinition)
+
+    @Insert
+    fun createAll(listOfReminders: List<ReminderInstance>)
+
+    @Query(
+        """
+        DELETE FROM reminder_instance
+        WHERE reminder_id = :reminderId
+        """
+    )
+    fun deleteByReminderId(reminderId: Long)
+
+
+}
+

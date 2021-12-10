@@ -11,9 +11,9 @@ import androidx.navigation.NavHostController
 import com.tommannson.bodystats.R
 
 @Composable
-fun TopBar(navController: NavController) {
+fun TopBar(navController: NavController, title: String = "BodyStats") {
     TopAppBar(
-        title = { Text("BodyStats") },
+        title = { Text(title) },
         navigationIcon = {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(

@@ -10,5 +10,10 @@ class BodyStatsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         AndroidThreeTen.init(this);
+        app = this
+    }
+
+    companion object {
+        lateinit var app: BodyStatsApplication
     }
 }

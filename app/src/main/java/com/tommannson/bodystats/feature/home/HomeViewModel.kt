@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.home
 
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.tommannson.bodystats.base.BaseViewmodel
 import com.tommannson.bodystats.model.statistics.getStatFormatter
@@ -127,6 +128,7 @@ class HomeViewModel
     }
 }
 
+@Immutable
 data class WeightInfo(
     val weight: Float,
     val targetWeight: String

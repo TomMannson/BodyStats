@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.home
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -46,12 +47,13 @@ fun HomeDashboardScreen(navController: NavController) {
                 .padding(16.dp)
 
         ) {
-
             val localState = state
-            when (localState) {
-                is HomeState.DataLoaded -> LoadedData(navController, localState, viewmodel)
-                is HomeState.NoData -> OnBoardSection(navController)
-                else -> Loading()
+            Crossfade(targetState = localState) {
+                when (it) {
+                    is HomeState.DataLoaded -> LoadedData(navController, it, viewmodel)
+                    is HomeState.NoData -> OnBoardSection(navController)
+                    else -> Loading()
+                }
             }
         }
     }

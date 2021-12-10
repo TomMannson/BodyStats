@@ -16,24 +16,20 @@ import com.tommannson.bodystats.R
 import com.tommannson.bodystats.model.statistics.getStatFormatter
 import com.tommannson.bodystats.feature.createstats.model.Configurations
 import com.tommannson.bodystats.infrastructure.SavedStats
+import com.tommannson.bodystats.model.statistics.BODY_COMPOSITION_PARAMS
 import com.tommannson.bodystats.utils.fmt
 
 @Composable
 fun NewBodyCompositionStats(
-    paramsToPresent: List<String>,
     mapOfStats: Map<String, List<SavedStats>>,
     onAddClicked: () -> Unit,
 ) {
+    val paramsToPresent = BODY_COMPOSITION_PARAMS
+
     Column() {
         Card(
             elevation = 3.dp
         ) {
-            val firstStats = (mapOfStats[paramsToPresent[1]] ?: listOf())
-            var numberOfSamples = firstStats.size
-
-            if (numberOfSamples > 3) {
-                numberOfSamples = 3
-            }
 
             Column() {
                 Row {
@@ -85,8 +81,6 @@ fun NewBodyCompositionStats(
                     for (index in 0 until paramsToPresent.size) {
                         val fullItemList = mapOfStats[paramsToPresent[index]] ?: listOf()
                         val samples = fullItemList.takeLast(2)
-
-
 
                         Column(
                             modifier = Modifier.animateContentSize()

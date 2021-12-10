@@ -1,8 +1,6 @@
 package com.tommannson.bodystats.infrastructure.configuration
 
-//import ReminderDefinition
-//import ReminderInstance
-//import androidx.room.AutoMigration
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -12,13 +10,13 @@ import com.tommannson.bodystats.infrastructure.*
     entities = arrayOf(
         ApplicationUser::class,
         SavedStats::class,
-//        ReminderDefinition::class,
-//        ReminderInstance::class,
+        ReminderDefinition::class,
+        ReminderInstance::class,
     ),
     autoMigrations = arrayOf(
-//        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 1, to = 2)
     ),
-    version = 1,
+    version = 2,
 )
 @TypeConverters(
     DateTimeConverter::class,
@@ -26,7 +24,7 @@ import com.tommannson.bodystats.infrastructure.*
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun statsDao(): StatsDao
-//    abstract fun reminderDao(): ReminderDao
+    abstract fun reminderDao(): ReminderDao
 }
 
 

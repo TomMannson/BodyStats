@@ -1,9 +1,6 @@
 package com.tommannson.bodystats.feature.home.sections
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -15,7 +12,6 @@ import androidx.navigation.NavController
 import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.home.HomeState
 import com.tommannson.bodystats.feature.home.HomeViewModel
-import com.tommannson.bodystats.model.statistics.BODY_COMPOSITION_PARAMS
 
 @Composable
 fun TopBar() {
@@ -48,29 +44,46 @@ fun LoadedData(
     localState: HomeState.DataLoaded,
     viewmodel: HomeViewModel
 ) {
-    UserInfo(navController, localState.currentUser, localState.weightInfo)
-    UserWeightInfo(
-        localState.weightInfo,
-        viewmodel::increaseWeight,
-        viewmodel::decreaseWeight
-    )
-    MyCharts(
-        navController,
-        localState.mapOfStats,
-        onAddClicked = {
-            navController.navigate(Screen.CreateStatScreen.route)
-        },
-        onMoreClicked = {
-            navController.navigate(Screen.PreviewScreen.route)
-        })
+    Column(
+//        contentPadding = PaddingValues(16.dp)
+    ) {
+//        items(5, { it }) { index ->
+//            if (index == 0) {
+        UserInfo(navController, localState.currentUser, localState.weightInfo)
+//            } else if (index ==? 1) {
+        UserWeightInfo(
+            localState.weightInfo,
+            viewmodel::increaseWeight,
+            viewmodel::decreaseWeight
+        )
+//            } else if (index == 2) {
+        MyCharts(
+            navController,
+            localState.mapOfStats,
+            onAddClicked = {
+                navController.navigate(Screen.CreateStatScreen.route)
+            },
+            onMoreClicked = {
+                navController.navigate(Screen.PreviewScreen.route)
+            })
+//            } else if (index == 3) {
+        Spacer(modifier = Modifier.height(16.dp))
+//            } else if (index == 4) {
+        NewBodyCompositionStats(
+
+            localState.mapOfStats,
+            onAddClicked = {
+                navController.navigate(Screen.CreateBodyCompositionScreen.route)
+            }
+        )
+//            }
+//    }
+    }
+
+
+
     Spacer(modifier = Modifier.height(16.dp))
-    NewBodyCompositionStats(
-        BODY_COMPOSITION_PARAMS,
-        localState.mapOfStats,
-        onAddClicked = {
-            navController.navigate(Screen.CreateBodyCompositionScreen.route)
-        }
-    )
+
 }
 
 @Composable

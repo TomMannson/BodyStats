@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.infrastructure
 
+import androidx.compose.runtime.Stable
 import androidx.room.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -15,6 +16,7 @@ import org.threeten.bp.ZoneOffset
         )
     )
 )
+@Stable
 data class SavedStats(
     @ColumnInfo(name = "stat_name") val statName: String,
     @ColumnInfo(name = "value") val value: Float,

@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.configuration.widgets.*
 import com.tommannson.bodystats.ui.controls.Progress
 import kotlinx.coroutines.flow.collect
@@ -52,15 +53,18 @@ fun ConfigurationScreen(navController: NavHostController) {
         if (localState == null) {
             Progress()
         } else {
-            UserForm(localState, onSubmit = { configState ->
-                viewmodel.submit(
-                    name = configState.currentName,
-                    height = configState.currentHeight.replace(",", "."),
-                    weight = configState.currentWeight.replace(",", "."),
-                    dreamWeight = configState.currentDreamWeight.replace(",", "."),
-                    gender = configState.currentDreamGender
-                )
-            })
+            UserForm(localState,
+                onSubmit = { configState ->
+                    viewmodel.submit(
+                        name = configState.currentName,
+                        height = configState.currentHeight.replace(",", "."),
+                        weight = configState.currentWeight.replace(",", "."),
+                        dreamWeight = configState.currentDreamWeight.replace(",", "."),
+                        gender = configState.currentDreamGender
+                    )
+                },
+                onConfigureReminders = { navController.navigate(Screen.RemindersScreen.route) }
+            )
         }
     }
 }
@@ -68,7 +72,8 @@ fun ConfigurationScreen(navController: NavHostController) {
 @Composable
 private fun UserForm(
     localState: ConfigurationState,
-    onSubmit: (ConfigurationViewState) -> Unit
+    onSubmit: (ConfigurationViewState) -> Unit,
+    onConfigureReminders: () -> Unit
 ) {
     val configState = rememberConfigurationViewState(localState.applicationUser)
     val focusManager = LocalFocusManager.current
@@ -112,7 +117,7 @@ private fun UserForm(
         )
 
         localState.applicationUser?.let {
-            TextButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(16.dp)) {
+            TextButton(onClick = onConfigureReminders, modifier = Modifier.padding(16.dp)) {
                 Text("Zaplanuj przypomnienia".uppercase())
             }
         }

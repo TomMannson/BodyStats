@@ -2,6 +2,7 @@ package com.tommannson.bodystats.feature
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.tommannson.bodystats.model.reminding.ReminderType
 
 sealed class Screen(val route: String) {
 
@@ -21,5 +22,13 @@ sealed class Screen(val route: String) {
 
     object CameraScanScreen : Screen("camera_scan")
     object RemindersScreen : Screen("reminders_screen")
+    object ReminderConfigScreen : Screen("reminder_config_screen") {
+        val REMINDER_TYPE = "reminderType"
+        val routeWithParam get() = "$route/{$REMINDER_TYPE}"
+        fun routeWithReminderType() = listOf(navArgument(REMINDER_TYPE) { type = NavType.StringType })
+        fun routeWithParam(reminderType: ReminderType): String {
+            return "$route/$reminderType"
+        }
+    }
 
 }

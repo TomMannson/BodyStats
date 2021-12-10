@@ -32,6 +32,12 @@ object DbConfigModule {
         return db.statsDao()
     }
 
+    @Singleton
+    @Provides
+    fun createReminderDao(db: AppDatabase): ReminderDao {
+        return db.reminderDao()
+    }
+
 }
 
 
