@@ -5,15 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.runtime.*
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tommannson.bodystats.R
@@ -37,6 +36,8 @@ fun Settings(navController: NavController) {
         topBar = { TopBar(navController, title = "Ustawienia") },
         scaffoldState = scafoldState
     ) {
+
+        var showCustomDialogWithResult by remember { mutableStateOf(false) }
 
         Column() {
             Text("Zaplanuj powiadomienia", modifier = Modifier.padding(8.dp))
@@ -74,9 +75,12 @@ fun Settings(navController: NavController) {
                     vm.toggle(ReminderType.Composition, it)
                 }
             )
+
+
             Text("Opcje importu i exportu", modifier = Modifier.padding(8.dp))
             ListItem(modifier = Modifier.clickable {
-                loadBackup(context)
+                showCustomDialogWithResult = true
+
             }, icon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_file_upload_24),
@@ -97,6 +101,39 @@ fun Settings(navController: NavController) {
                 }) {
                 Text("Export")
             }
+        }
+
+
+
+
+        if (showCustomDialogWithResult) {
+            AlertDialog(
+                properties = DialogProperties(
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true,
+                ),
+                onDismissRequest = {
+                    showCustomDialogWithResult = false
+                },
+                title = {
+                    Text("Operacja usunie cały dotychczasowy postęp. \nCzy chcesz kontynuować?")
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showCustomDialogWithResult = false
+                        loadBackup(context)
+                    }) {
+                        Text("Ok")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showCustomDialogWithResult = false
+                    }) {
+                        Text("Anuluj")
+                    }
+                }
+            )
         }
     }
 }

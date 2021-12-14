@@ -97,6 +97,9 @@ ORDER BY submitted_at ASC
 
     @Update
     fun udateStats(itemsToCreate: List<SavedStats>)
+
+    @Query("""DELETE FROM savedstats""")
+    fun clearAll()
 }
 
 @Dao

@@ -136,6 +136,7 @@ object LineChartUtils {
         transitionProgress: Float
     ): Path = Path().apply {
         var prevPointLocation: Offset? = null
+        var startFrom = 0
         lineChartData.points.forEachIndexed { index, point ->
             withProgress(
                 index = index,
@@ -149,7 +150,12 @@ object LineChartUtils {
                     index = index
                 )
 
-                if (index == 0) {
+                if(pointLocation.x < 0){
+                    startFrom++
+                    return@withProgress
+                }
+
+                if (index == startFrom) {
                     moveTo(pointLocation.x, pointLocation.y)
                 } else {
                     if (progress <= 1f) {

@@ -14,13 +14,13 @@ class ExportProcessor
 @Inject
 constructor(
     val user: UserDao,
-    val starDao: StatsDao
+    val statsDao: StatsDao
 ) {
 
     fun processExport(fileStream: OutputStream) {
         user.getAll().firstOrNull()?.let {
 
-            val fullList = starDao.getAll()
+            val fullList = statsDao.getAll()
 
             val printWriter = PrintWriter(fileStream ?: throw IOException("invalidStream"))
             val writer = CSVWriter(printWriter)
@@ -63,8 +63,8 @@ constructor(
                     )
                 )
             }
-
-            starDao.createNewStats(data)
+            statsDao.clearAll()
+            statsDao.createNewStats(data)
         }
     }
 
