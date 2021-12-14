@@ -1,8 +1,6 @@
 package com.tommannson.bodystats.feature.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,7 +11,7 @@ import com.tommannson.bodystats.feature.configuration.ConfigurationScreen
 import com.tommannson.bodystats.feature.home.HomeDashboardScreen
 import com.tommannson.bodystats.feature.previewstats.PreviewStatsScreen
 import com.tommannson.bodystats.feature.reminders.ReminderConfig
-import com.tommannson.bodystats.feature.reminders.Reminders
+import com.tommannson.bodystats.feature.reminders.Settings
 import com.tommannson.bodystats.model.reminding.ReminderType
 import com.tommannson.bodystats.model.statistics.BASIC_PARAMS_FOR_CREATE
 import com.tommannson.bodystats.model.statistics.BODY_COMPOSITION_PARAMS
@@ -51,8 +49,8 @@ fun Navigation(
         composable(Screen.PreviewScreen.route) {
             PreviewStatsScreen(navController)
         }
-        composable(Screen.RemindersScreen.route) {
-            Reminders(navController)
+        composable(Screen.SettingsScreen.route) {
+            Settings(navController)
         }
         composable(
             Screen.ReminderConfigScreen.routeWithParam,

@@ -21,7 +21,7 @@ sealed class Screen(val route: String) {
     }
 
     object CameraScanScreen : Screen("camera_scan")
-    object RemindersScreen : Screen("reminders_screen")
+    object SettingsScreen : Screen("settings_screen")
     object ReminderConfigScreen : Screen("reminder_config_screen") {
         val REMINDER_TYPE = "reminderType"
         val routeWithParam get() = "$route/{$REMINDER_TYPE}"

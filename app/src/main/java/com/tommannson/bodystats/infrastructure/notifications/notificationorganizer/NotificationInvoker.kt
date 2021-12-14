@@ -70,7 +70,7 @@ class NotificationInvoker {
             .apply {
                 putExtras(
                     bundleOf(
-                        "LINK" to Screen.RemindersScreen.route
+                        "LINK" to Screen.SettingsScreen.route
                     )
                 )
             }

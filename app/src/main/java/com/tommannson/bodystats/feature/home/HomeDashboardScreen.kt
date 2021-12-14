@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.home
 
+import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +14,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.tommannson.bodystats.feature.MainActivity
+import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.home.sections.LoadedData
 import com.tommannson.bodystats.feature.home.sections.Loading
 import com.tommannson.bodystats.feature.home.sections.OnBoardSection
@@ -34,10 +38,16 @@ fun HomeDashboardScreen(navController: NavController) {
         viewmodel.initialiseData(FULL_LIST_OF_STATS)
     }
 
+    val screen = LocalContext.current
+
     val state by viewmodel.state.collectAsState()
 
     Scaffold(
-        topBar = { TopBar() },
+        topBar = {
+            TopBar(
+                onSettings = { navController.navigate(Screen.SettingsScreen.route) },
+            )
+        },
         scaffoldState = scafoldState
     ) {
         Column(
@@ -57,6 +67,11 @@ fun HomeDashboardScreen(navController: NavController) {
             }
         }
     }
+}
+
+fun openFilePicker(ctx: Context) {
+    val screen = ctx as MainActivity
+    screen.saveExportLocation()
 }
 
 

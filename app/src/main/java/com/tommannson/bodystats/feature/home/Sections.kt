@@ -1,30 +1,32 @@
 package com.tommannson.bodystats.feature.home.sections
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.home.HomeState
 import com.tommannson.bodystats.feature.home.HomeViewModel
 
 @Composable
-fun TopBar() {
+fun TopBar(
+    onSettings: () -> Unit
+) {
     TopAppBar(
         title = { Text("BodyStats") },
         actions = {
             //TODO uncomment when import will be ready
-//            IconButton(onClick = { /* doSomething() */ }) {
-//                Icon(
-//                    painterResource(id = R.drawable.ic_baseline_import_export_24),
-//                    contentDescription = null
-//                )
-//            }
+            IconButton(onClick = onSettings) {
+                Icon(
+                    painterResource(id = R.drawable.ic_baseline_settings_24),
+                    contentDescription = null
+                )
+            }
         }
     )
 }

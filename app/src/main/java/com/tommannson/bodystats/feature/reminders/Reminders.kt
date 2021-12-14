@@ -35,68 +35,10 @@ import kotlinx.coroutines.flow.collect
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 
-@Composable
-fun Reminders(navController: NavController) {
-    val scafoldState = rememberScaffoldState();
 
-    val vm = hiltViewModel<RemindersListViewModel>()
-    val state by vm.state.collectAsState()
 
-    Scaffold(
-        topBar = { TopBar(navController, title = "Powiadomienia") },
-        scaffoldState = scafoldState
-    ) {
 
-        Column() {
-            ReminderItem(
-                "Ważenie",
-                getReminder(state.groupedDefinitions, ReminderType.Weight),
-                enabled = hasReminderEnabled(state.groupedDefinitions, ReminderType.Weight),
-                onTap = {
-                    navController.navigate(Screen.ReminderConfigScreen.routeWithParam(ReminderType.Weight))
-                },
-                onToggle = {
-                    vm.toggle(ReminderType.Weight, it)
-                }
-            )
-            ReminderItem(
-                "Kontrola wymiarów",
-                getReminder(state.groupedDefinitions, ReminderType.Measurements),
-                enabled = hasReminderEnabled(state.groupedDefinitions, ReminderType.Measurements),
-                onTap = {
-                    navController.navigate(Screen.ReminderConfigScreen.routeWithParam(ReminderType.Measurements))
-                },
-                onToggle = {
-                    vm.toggle(ReminderType.Measurements, it)
-                }
 
-            )
-            ReminderItem(
-                "Skład ciała",
-                getReminder(state.groupedDefinitions, ReminderType.Composition),
-                enabled = hasReminderEnabled(state.groupedDefinitions, ReminderType.Composition),
-                onTap = {
-                    navController.navigate(Screen.ReminderConfigScreen.routeWithParam(ReminderType.Composition))
-                },
-                onToggle = {
-                    vm.toggle(ReminderType.Composition, it)
-                }
-            )
-        }
-    }
-}
-
-fun hasReminderEnabled(
-    map: Map<String, List<ReminderDefinition>>,
-    type: ReminderType
-): Boolean {
-    val loadedColection = map.getOrDefault(type.name, listOf())
-    if (loadedColection.isEmpty()) {
-        return false
-    } else {
-        return loadedColection.first().enabled
-    }
-}
 
 fun getReminder(
     map: Map<String, List<ReminderDefinition>>,
@@ -108,44 +50,6 @@ fun getReminder(
     } else {
         return loadedColection.firstOrNull()
     }
-}
-
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun ReminderItem(
-    title: String,
-    data: ReminderDefinition?,
-    enabled: Boolean,
-    onTap: () -> Unit,
-    onToggle: (Boolean) -> Unit
-) {
-    val secondaryText: @Composable (() -> Unit)? = if (data != null) {
-        {
-            val text = "Co ${data.timeBetweenReminders} tygodnie o ${data.timeOfReminder}"
-            Text(text, style = MaterialTheme.typography.subtitle1)
-        }
-    } else {
-        null
-    }
-
-    ListItem(
-        modifier = Modifier.clickable(onClick = onTap),
-        text = { Text(title) },
-        secondaryText = secondaryText,
-        trailing = {
-            Switch(
-                checked = enabled,
-                onCheckedChange = {
-                    onToggle(!enabled)
-                },
-                colors = SwitchDefaults.colors(
-                    checkedThumbColor = MaterialTheme.colors.primary,
-                    uncheckedThumbColor = Color.LightGray
-                )
-            )
-        }
-    )
 }
 
 

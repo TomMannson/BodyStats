@@ -62,8 +62,7 @@ fun ConfigurationScreen(navController: NavHostController) {
                         dreamWeight = configState.currentDreamWeight.replace(",", "."),
                         gender = configState.currentDreamGender
                     )
-                },
-                onConfigureReminders = { navController.navigate(Screen.RemindersScreen.route) }
+                }
             )
         }
     }
@@ -73,7 +72,6 @@ fun ConfigurationScreen(navController: NavHostController) {
 private fun UserForm(
     localState: ConfigurationState,
     onSubmit: (ConfigurationViewState) -> Unit,
-    onConfigureReminders: () -> Unit
 ) {
     val configState = rememberConfigurationViewState(localState.applicationUser)
     val focusManager = LocalFocusManager.current
@@ -116,11 +114,11 @@ private fun UserForm(
             onValueChange = configState::editDreamWeight,
         )
 
-        localState.applicationUser?.let {
-            TextButton(onClick = onConfigureReminders, modifier = Modifier.padding(16.dp)) {
-                Text("Zaplanuj przypomnienia".uppercase())
-            }
-        }
+//        localState.applicationUser?.let {
+//            TextButton(onClick = onConfigureReminders, modifier = Modifier.padding(16.dp)) {
+//                Text("Zaplanuj przypomnienia".uppercase())
+//            }
+//        }
 
         Spacer(modifier = Modifier.weight(1.0f))
 
