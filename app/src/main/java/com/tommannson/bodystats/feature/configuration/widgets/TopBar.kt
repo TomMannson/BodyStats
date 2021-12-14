@@ -7,14 +7,19 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.tommannson.bodystats.R
 
 @Composable
 fun TopBar(navController: NavController, title: String = "BodyStats") {
     TopAppBar(
         title = { Text(title) },
-        navigationIcon = {
+        navigationIcon = buildIconInNeeded(navController)
+    )
+}
+
+fun buildIconInNeeded(navController: NavController): @Composable (() -> Unit)? {
+    if (navController.previousBackStackEntry != null)
+        return {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_arrow_back_24),
@@ -22,5 +27,7 @@ fun TopBar(navController: NavController, title: String = "BodyStats") {
                 )
             }
         }
-    )
+    else {
+        return null
+    }
 }

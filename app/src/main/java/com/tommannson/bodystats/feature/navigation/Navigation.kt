@@ -1,6 +1,8 @@
 package com.tommannson.bodystats.feature.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,11 +20,12 @@ import com.tommannson.bodystats.model.statistics.BODY_COMPOSITION_PARAMS
 
 @Composable
 fun Navigation(
-    navController: NavHostController = rememberNavController()
+    startDestination: String,
+    navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.HomeScreen.route
+        startDestination = startDestination
     ) {
         composable(Screen.HomeScreen.route) {
             HomeDashboardScreen(navController)

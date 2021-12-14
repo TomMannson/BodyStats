@@ -35,6 +35,9 @@ FROM applicationuser
 @Dao
 interface StatsDao {
 
+    @Query("""SELECT * from savedstats""")
+    fun getAll(): List<SavedStats>
+
     @Query(
         """SELECT *
 FROM savedstats
@@ -98,6 +101,14 @@ ORDER BY submitted_at ASC
 
 @Dao
 interface ReminderDao {
+
+    @Query(
+        """SELECT *
+                    FROM reminder_definition
+                    WHERE owner_id=:owner AND enabled=1 """
+    )
+    fun numberOfEnabledRemindersForOwner(owner: Long): List<ReminderDefinition>
+
     @Query(
         """SELECT *
                     FROM reminder_definition

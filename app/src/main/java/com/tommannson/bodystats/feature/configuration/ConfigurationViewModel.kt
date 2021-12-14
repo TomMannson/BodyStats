@@ -4,9 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tommannson.bodystats.feature.reminders.ModelReminder
 import com.tommannson.bodystats.infrastructure.ApplicationUser
 import com.tommannson.bodystats.infrastructure.SavedStats
-import com.tommannson.bodystats.infrastructure.configuration.*
+import com.tommannson.bodystats.infrastructure.configuration.StatsDao
+import com.tommannson.bodystats.infrastructure.configuration.UserDao
+import com.tommannson.bodystats.infrastructure.notifications.RemindersAvailable
+import com.tommannson.bodystats.model.reminding.ReminderType
 import com.tommannson.bodystats.model.statistics.Statistic
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ConfigurationViewModel @Inject constructor(
     val dao: UserDao,
-    val statsDao: StatsDao
+    val statsDao: StatsDao,
+    val remindersModel: ModelReminder,
+    val featureInfo: RemindersAvailable
 ) : ViewModel() {
 
     private val _configurationState: MutableLiveData<ConfigurationState> = MutableLiveData()
@@ -59,6 +65,8 @@ class ConfigurationViewModel @Inject constructor(
                     val newWeight =
                         SavedStats(Statistic.WEIGHT, weight.toFloat(), LocalDate.now(), ids[0])
                     statsDao.createNewStats(listOf(newWeight))
+                    remindersModel.toggle(ReminderType.Weight)
+                    featureInfo.startSchedule()
                 } else {
                     currentUser.copy(
                         name = name,

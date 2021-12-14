@@ -14,7 +14,7 @@ android {
         applicationId "com.tommannson.bodystats"
         minSdk 24
         targetSdk 31
-        versionCode 3
+        versionCode 4git
         versionName "0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -104,6 +104,15 @@ dependencies {
     //ROOM SQL DATABASE
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+    //datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // When using Kotlin.
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+
     //image loading
     implementation("io.coil-kt:coil:1.4.0")
     implementation 'de.siegmar:fastcsv:2.1.0'

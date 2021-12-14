@@ -13,9 +13,7 @@ import com.tommannson.bodystats.model.reminding.ReminderType
 import dagger.hilt.android.AndroidEntryPoint
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
-import java.util.*
 import javax.inject.Inject
 
 /**
@@ -54,7 +52,7 @@ class AlertPointerUpdater : IntentService("AlertPointerUpdaterThread") {
                     triggeredTime
                 )
 
-            producer.showPaymentNotification(
+            producer.showReminderNotification(
                 this,
                 allReminders.map { ReminderType.valueOf(it.type) }.distinct()
             )
