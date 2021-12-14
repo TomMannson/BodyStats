@@ -14,7 +14,7 @@ android {
         applicationId "com.tommannson.bodystats"
         minSdk 24
         targetSdk 31
-        versionCode 4git
+        versionCode 4
         versionName "0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -115,7 +115,9 @@ dependencies {
 
     //image loading
     implementation("io.coil-kt:coil:1.4.0")
-    implementation 'de.siegmar:fastcsv:2.1.0'
+//    implementation 'de.siegmar:fastcsv:2.1.0'
+    implementation 'com.opencsv:opencsv:5.5.2'
+
 
     //ASYNC
     implementation("androidx.room:room-ktx:$room_version")
