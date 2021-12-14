@@ -48,7 +48,7 @@ class RemindMeFeatures
         val users = userDao.getAll()
 
         if (users.isEmpty()) {
-            return Result.success()q
+            return Result.success()
         }
 
         val foundUser = users.first()
