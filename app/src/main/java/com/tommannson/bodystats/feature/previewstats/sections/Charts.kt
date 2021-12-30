@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.github.tehras.charts.bar.BarChart
+import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.line.LineChart
 import com.github.tehras.charts.line.LineChartData2D
 import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
@@ -16,10 +18,12 @@ import com.github.tehras.charts.line.renderer.xaxis.DefinedXAxisDrawer
 import com.github.tehras.charts.line.renderer.xaxis.PrescaledXAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.GridYAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.PrescaledGridYAxisDrawer
+import com.tommannson.bodystats.feature.home.MeasurementsProgress
 import com.tommannson.bodystats.feature.home.sections.listOfDates
 import com.tommannson.bodystats.feature.previewstats.MonthGridData
 import com.tommannson.bodystats.feature.previewstats.WeekGridData
 import com.tommannson.bodystats.infrastructure.SavedStats
+import com.tommannson.bodystats.ui.theme.baseColor
 import org.threeten.bp.LocalDate
 
 @Composable
@@ -140,6 +144,22 @@ fun WeekGrid(data: WeekGridData) {
         ),
         yAxisDrawer = PrescaledGridYAxisDrawer(),
         horizontalOffset = 0f
+    )
+}
+
+@Composable
+fun SizesProgress(progress: MeasurementsProgress) {
+    BarChart(
+        barChartData = BarChartData(
+            bars = progress.partialProgress.toList()
+                .map { BarChartData.Bar(it.second, baseColor, "A") },
+            startAtZero = false
+        ),
+        modifier = Modifier
+            .padding(16.dp)
+            .padding(end = 16.dp)
+            .fillMaxWidth()
+            .height(300.dp),
     )
 }
 

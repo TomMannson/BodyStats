@@ -86,7 +86,6 @@ private fun LoadedContent(
             localState.groupded[listToDisplay[page]]?.toMutableList()
                 ?: mutableListOf()
 
-        CreateGrid(localState.allCalculatedWariants[TimeKind.MONTHLY]!!)
 
         if (listOfItems.isEmpty()) {
             Text("Brak danych do wyświetlenia")

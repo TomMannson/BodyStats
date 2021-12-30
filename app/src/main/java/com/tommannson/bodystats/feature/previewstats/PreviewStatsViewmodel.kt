@@ -2,9 +2,11 @@ package com.tommannson.bodystats.feature.previewstats
 
 import androidx.lifecycle.viewModelScope
 import com.tommannson.bodystats.base.BaseViewmodel
+import com.tommannson.bodystats.feature.home.MeasurementsProgress
 import com.tommannson.bodystats.infrastructure.SavedStats
 import com.tommannson.bodystats.infrastructure.configuration.StatsDao
 import com.tommannson.bodystats.infrastructure.configuration.UserDao
+import com.tommannson.bodystats.model.paramrecalculation.progress.MeasureProgressCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +29,8 @@ class PreviewStatsViewmodel
     private val _state = MutableStateFlow<State>(State.Init)
     val state: StateFlow<State> = _state
 
+    val progressCalculator = MeasureProgressCalculator()
+
     fun initPreview(listToDisplay: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             val user = userDao.getAll().firstOrNull()
@@ -48,11 +52,15 @@ class PreviewStatsViewmodel
                         TimeKind.MONTHLY to calculateMonthlyScope(groupedStats, listToDisplay),
                     )
 
+                    val progress: MeasurementsProgress =
+                        progressCalculator.calculateDifference(groupedStats)
+
                     _state.emit(
                         State.DataLoaded(
                             groupedStats,
                             allCalculatedWariants = groupedStatsByTimeRange,
-                            selectedMethod = groupedStatsByTimeRange.get(TimeKind.DAYLY)!!
+                            selectedMethod = groupedStatsByTimeRange.get(TimeKind.DAYLY)!!,
+                            progressInfo = progress
                         )
                     )
                 }
@@ -288,7 +296,8 @@ sealed class State {
     data class DataLoaded(
         val groupded: Map<String, List<SavedStats>>,
         val selectedMethod: StatsShowInTime = StatsShowInTime.DailyStats(groupded),
-        val allCalculatedWariants: Map<TimeKind, StatsShowInTime> = mapOf()
+        val allCalculatedWariants: Map<TimeKind, StatsShowInTime> = mapOf(),
+        val progressInfo: MeasurementsProgress
     ) : State()
 }
 

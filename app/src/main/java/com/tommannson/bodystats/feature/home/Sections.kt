@@ -47,42 +47,31 @@ fun LoadedData(
     viewmodel: HomeViewModel
 ) {
     Column(
-//        contentPadding = PaddingValues(16.dp)
     ) {
-//        items(5, { it }) { index ->
-//            if (index == 0) {
         UserInfo(navController, localState.currentUser, localState.weightInfo)
-//            } else if (index ==? 1) {
         UserWeightInfo(
             localState.weightInfo,
             viewmodel::increaseWeight,
             viewmodel::decreaseWeight
         )
-//            } else if (index == 2) {
         MyCharts(
             navController,
             localState.mapOfStats,
+            localState.progress,
             onAddClicked = {
                 navController.navigate(Screen.CreateStatScreen.route)
             },
             onMoreClicked = {
                 navController.navigate(Screen.PreviewScreen.route)
             })
-//            } else if (index == 3) {
         Spacer(modifier = Modifier.height(16.dp))
-//            } else if (index == 4) {
         NewBodyCompositionStats(
-
             localState.mapOfStats,
             onAddClicked = {
                 navController.navigate(Screen.CreateBodyCompositionScreen.route)
             }
         )
-//            }
-//    }
     }
-
-
 
     Spacer(modifier = Modifier.height(16.dp))
 

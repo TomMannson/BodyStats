@@ -4,6 +4,7 @@ fun getStatUnit(stat: String) = when (stat) {
     Statistic.WEIGHT -> "kg"
     Statistic.WEIGHT_COMPOSITION -> "kg"
     in BASIC_PARAMS -> "cm"
+    Statistic.SIZE_PROGRESS -> "cm"
     in listOf(Statistic.FAT_PERCENT, Statistic.TBW_PERCENT) -> "%"
     Statistic.BMR -> "kcal"
     Statistic.METABOLIC_AGE -> "lat"
@@ -21,6 +22,7 @@ fun getStatUnit(stat: String) = when (stat) {
 
 fun getStatShift(stat: String) = when (stat) {
     in BASIC_PARAMS -> .5
+    Statistic.SIZE_PROGRESS -> .5
     in listOf(Statistic.FAT_PERCENT, Statistic.TBW_PERCENT) -> .1
     in listOf(Statistic.BMR, Statistic.VISCELAR_FAT_RATING, Statistic.METABOLIC_AGE) -> 1.0
     Statistic.BMI -> .1

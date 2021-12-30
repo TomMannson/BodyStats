@@ -10,6 +10,8 @@ sealed class Screen(val route: String) {
     object ConfigurationScreen : Screen("configuration")
     object CreateStatScreen : Screen("create_stats")
     object CreateBodyCompositionScreen : Screen("create_body_composition")
+    object PreviewSumaryScreen : Screen("preview_summary_screen")
+
 
     object PreviewScreen : Screen("preview_screen") {
         val PARAM_NAME = "statType"

@@ -2,6 +2,7 @@ package com.tommannson.bodystats.feature
 
 //import com.tommannson.bodystats.databinding.ActivityMainBinding
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Button(this)
 
         val location = intent.extras?.getString("LINK") ?: Screen.HomeScreen.route
 

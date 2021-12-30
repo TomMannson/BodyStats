@@ -1,5 +1,6 @@
 package com.tommannson.bodystats.feature.previewstats.sections
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.tommannson.bodystats.feature.createstats.model.Configurations
 import com.tommannson.bodystats.model.statistics.getStatFormatter
 import com.tommannson.bodystats.model.statistics.getStatUnit
 import com.tommannson.bodystats.feature.previewstats.MonthOfYear
@@ -30,6 +32,32 @@ fun HistoryTitle() {
     )
 }
 
+@Composable
+fun SummaryItem(
+    name: String,
+    value: Float,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            Configurations.PARAMS_UI_MAP[name]?.name ?: "NO_NAME",
+            style = MaterialTheme.typography.subtitle1
+        )
+        Text(
+            "${value fmt getStatFormatter(name)} ${
+                getStatUnit(
+                    name
+                )
+            }", modifier = Modifier.align(Alignment.CenterVertically)
+        )
+    }
+}
 
 @Composable
 fun HistoryRow(

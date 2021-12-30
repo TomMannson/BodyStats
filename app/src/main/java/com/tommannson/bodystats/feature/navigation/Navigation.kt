@@ -10,6 +10,7 @@ import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.configuration.ConfigurationScreen
 import com.tommannson.bodystats.feature.home.HomeDashboardScreen
 import com.tommannson.bodystats.feature.previewstats.PreviewStatsScreen
+import com.tommannson.bodystats.feature.previewstats.PreviewSummaryScreen
 import com.tommannson.bodystats.feature.reminders.ReminderConfig
 import com.tommannson.bodystats.feature.reminders.Settings
 import com.tommannson.bodystats.model.reminding.ReminderType
@@ -60,6 +61,11 @@ fun Navigation(
                 it.arguments?.getString(Screen.ReminderConfigScreen.REMINDER_TYPE) ?: ""
             )
             ReminderConfig(navController, type)
+        }
+        composable(
+            Screen.PreviewSumaryScreen.route,
+        ) {
+            PreviewSummaryScreen(navController)
         }
     }
 }

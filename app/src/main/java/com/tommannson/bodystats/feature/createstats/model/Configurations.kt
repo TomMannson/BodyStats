@@ -7,7 +7,7 @@ data class Configuration(val name: String, val image: Int, val shortName: String
 
 object Configurations {
 
-    val PARAMS_UI_MAP = mapOf<String, Configuration>(
+    val PARAMS_UI_MAP = mapOf(
         Statistic.BUST_STATISTIC to Configuration("Biust", R.drawable.biust_300),
         Statistic.ARM_STATISTIC to Configuration("Ramie", R.drawable.ramie_300),
         Statistic.WAIST_STATISTIC to Configuration("Talia", R.drawable.talia_300),
@@ -15,6 +15,8 @@ object Configurations {
         Statistic.HIPS_STATISTIC to Configuration("Biodra", R.drawable.biodra_300),
         Statistic.THIGH_STATISTIC to Configuration("Udo", R.drawable.udo_300),
         Statistic.CALF_STATISTIC to Configuration("Łydka", R.drawable.lydka_300),
+
+        Statistic.SIZE_PROGRESS to Configuration("Wymiary", R.drawable.body_composition_analyzer_new),
 
         Statistic.WEIGHT to Configuration("Waga", R.drawable.body_composition_analyzer_new, ),
         Statistic.WEIGHT_COMPOSITION to Configuration("Waga składu ciała", R.drawable.body_composition_analyzer, "Waga kg"),

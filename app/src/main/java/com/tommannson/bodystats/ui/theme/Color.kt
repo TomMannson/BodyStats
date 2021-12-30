@@ -6,9 +6,13 @@ import androidx.compose.material.lightColors
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 
+
+
 private val Slate200 = Color(0xFFff7961)
 private val Slate600 = Color(0xFFba000d)
 private val Slate800 = Color(0xFFf44336)
+
+val baseColor = Slate800
 
 private val Orange500 = Color(0xFFF9AA33)
 private val Orange700 = Color(0xFFC78522)

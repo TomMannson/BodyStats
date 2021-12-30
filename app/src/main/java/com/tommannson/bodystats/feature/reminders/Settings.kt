@@ -83,7 +83,7 @@ fun Settings(navController: NavController) {
 
             }, icon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_file_upload_24),
+                    painter = painterResource(id = R.drawable.ic_baseline_file_download_24),
                     contentDescription = null
                 )
             }) {
@@ -102,9 +102,6 @@ fun Settings(navController: NavController) {
                 Text("Export")
             }
         }
-
-
-
 
         if (showCustomDialogWithResult) {
             AlertDialog(

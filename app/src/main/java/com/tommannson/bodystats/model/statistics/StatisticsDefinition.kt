@@ -4,6 +4,8 @@ object Statistic {
     const val WEIGHT = "weight"
     const val WEIGHT_COMPOSITION = "weight_composition"
 
+    const val SIZE_PROGRESS = "SIZE_PROGRESS" //calculated progress from basic params
+
     //basics
     const val BUST_STATISTIC = "bust"
     const val ARM_STATISTIC = "arm"

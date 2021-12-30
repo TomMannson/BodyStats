@@ -89,7 +89,7 @@ ORDER BY submitted_at ASC
     fun getParamLive(
         owner: Long,
         statsNames: List<String>,
-        date: LocalDate = LocalDate.now().minusYears(10)
+        date: LocalDate = LocalDate.now().minusYears(100)
     ): Flow<List<SavedStats>>
 
     @Insert

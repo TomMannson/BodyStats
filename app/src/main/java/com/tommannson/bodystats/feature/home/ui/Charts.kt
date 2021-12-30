@@ -13,6 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.github.tehras.charts.bar.BarChart
+import com.github.tehras.charts.bar.BarChartData
 import com.github.tehras.charts.line.LineChart
 import com.github.tehras.charts.line.LineChartData2D
 import com.github.tehras.charts.line.LineChartData2D.Point
@@ -20,13 +22,18 @@ import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
 import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
 import com.github.tehras.charts.line.renderer.xaxis.DefinedXAxisDrawer
 import com.github.tehras.charts.line.renderer.yaxis.SimpleYAxisDrawer
+import com.github.tehras.charts.piechart.PieChart
+import com.github.tehras.charts.piechart.PieChartData
+import com.github.tehras.charts.piechart.renderer.SimpleSliceDrawer
 import com.tommannson.bodystats.R
 import com.tommannson.bodystats.feature.Screen
-import com.tommannson.bodystats.model.statistics.getStatFormatter
-import com.tommannson.bodystats.model.statistics.getStatUnit
 import com.tommannson.bodystats.feature.createstats.model.Configurations.PARAMS_UI_MAP
+import com.tommannson.bodystats.feature.home.MeasurementsProgress
 import com.tommannson.bodystats.infrastructure.SavedStats
 import com.tommannson.bodystats.model.statistics.Statistic
+import com.tommannson.bodystats.model.statistics.getStatFormatter
+import com.tommannson.bodystats.model.statistics.getStatUnit
+import com.tommannson.bodystats.ui.theme.baseColor
 import com.tommannson.bodystats.utils.fmt
 import org.threeten.bp.LocalDate
 import kotlin.math.absoluteValue
@@ -41,6 +48,7 @@ val listOfDates: List<LocalDate> = (0 until 5).map {
 fun MyCharts(
     naviController: NavController,
     mapOfStats: Map<String, List<SavedStats>>,
+    measurementsProgress: MeasurementsProgress,
     onAddClicked: () -> Unit,
     onMoreClicked: () -> Unit,
 
@@ -66,17 +74,31 @@ fun MyCharts(
                 }
             }
             val listToDisplay =
-                listOf(Statistic.WEIGHT, Statistic.WAIST_STATISTIC, Statistic.BELLY_STATISTIC)
+                listOf(Statistic.WEIGHT, Statistic.SIZE_PROGRESS, Statistic.BELLY_STATISTIC)
 
             for (item in listToDisplay) {
                 val config = PARAMS_UI_MAP[item]
-                SimpleChart(
-                    chartName = config?.name ?: "NO_NAME",
-                    data = mapOfStats[item] ?: listOf(),
-                    typeOfdata = item
-                ) {
-                    naviController.navigate(Screen.PreviewScreen.routeWithParam(item))
+                if (item == Statistic.SIZE_PROGRESS) {
+                    SimplePieChart(
+                        chartName = config?.name ?: "NO_NAME",
+                        data = measurementsProgress,
+                        typeOfdata = item
+                    ) {
+                        naviController.navigate(Screen.PreviewSumaryScreen.route)
+                    }
+                } else {
+
+                    SimpleLineChart(
+                        chartName = config?.name ?: "NO_NAME",
+                        data = mapOfStats[item] ?: listOf(),
+                        typeOfdata = item
+                    ) {
+                        naviController.navigate(Screen.PreviewScreen.routeWithParam(item))
+                    }
                 }
+
+
+
                 Divider()
             }
             TextButton(
@@ -88,6 +110,7 @@ fun MyCharts(
         }
     }
 }
+
 
 @Composable
 fun TryChart(list: List<Point<LocalDate>>) {
@@ -118,13 +141,86 @@ fun TryChart(list: List<Point<LocalDate>>) {
 }
 
 @Composable
-fun SimpleChart(
+fun SimplePieChart(
+    chartName: String,
+    data: MeasurementsProgress,
+    typeOfdata: String,
+    onChartClicked: () -> Unit
+) {
+    if (!data.valid) {
+        Text("Brak danych do wyświetlenia wykresu: $chartName", modifier = Modifier.padding(16.dp))
+    } else {
+
+        Box(
+            modifier = Modifier.clickable(onClick = onChartClicked)
+        ) {
+            val sign = data.summaryProgress.arrowDirectionAtSign()
+            val formated = data.summaryProgress.absoluteValue fmt getStatFormatter(typeOfdata)
+            val unit = getStatUnit(typeOfdata)
+            SimplePieChart(
+                chartName,
+                "$formated$sign $unit",
+                data.submitDate.toString(),
+                data.partialProgress.toList().map { it.second }
+            )
+        }
+    }
+}
+
+@Composable
+private fun SimplePieChart(
+    chartName: String,
+    formatedValue: String,
+    progressStart: String,
+    sizeDifferences: List<Float>
+) {
+    Box(
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth()
+    ) {
+
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.weight(0.7f)
+            ) {
+                Text(chartName, style = MaterialTheme.typography.h6)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text("Od startu", style = MaterialTheme.typography.body2)
+                Text(progressStart, style = MaterialTheme.typography.body2)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    formatedValue,
+                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
+                )
+            }
+            Box(modifier = Modifier.weight(1.3f)) {
+//                    Chart()
+                BarChart(
+                    barChartData = BarChartData(
+                        bars = sizeDifferences.mapIndexed { index, value ->
+                            BarChartData.Bar(value, baseColor, "A")
+                        },
+                        startAtZero = false
+                    ),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun SimpleLineChart(
     chartName: String,
     data: List<SavedStats>,
     typeOfdata: String,
     onChartClicked: () -> Unit
 ) {
-    if (data.isEmpty()) {
+    if (data.isEmpty() ) {
         Text("Brak danych do wyświetlenia wykresu: $chartName", modifier = Modifier.padding(16.dp))
     } else {
 
@@ -137,7 +233,7 @@ fun SimpleChart(
             val sign = differenceFromStart.arrowDirectionAtSign()
             val formated = differenceFromStart.absoluteValue fmt getStatFormatter(typeOfdata)
             val unit = getStatUnit(typeOfdata)
-            SimpleChart(
+            SimpleLineChart(
                 chartName = chartName,
                 date = firstItem.submitedAt.toString(),
                 difference = "$formated$sign $unit",
@@ -145,12 +241,11 @@ fun SimpleChart(
             )
         }
     }
-
 }
 
 
 @Composable
-fun SimpleChart(
+fun SimpleLineChart(
     chartName: String,
     date: String,
     difference: String,
@@ -198,7 +293,7 @@ fun SimpleChart(
 @Preview
 @Composable
 fun PreviewSimpleChart() {
-    SimpleChart(chartName = "A", date = "sdads", difference = "fff")
+    SimpleLineChart(chartName = "A", date = "sdads", difference = "fff")
 }
 
 @Composable
