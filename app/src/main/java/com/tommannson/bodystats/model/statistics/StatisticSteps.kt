@@ -2,8 +2,8 @@ package com.tommannson.bodystats.model.statistics
 
 val BASIC_PARAMS = listOf(
     Statistic.WEIGHT,
-    Statistic.BUST_STATISTIC,
     Statistic.ARM_STATISTIC,
+    Statistic.BUST_STATISTIC,
     Statistic.WAIST_STATISTIC,
     Statistic.BELLY_STATISTIC,
     Statistic.HIPS_STATISTIC,
@@ -11,8 +11,8 @@ val BASIC_PARAMS = listOf(
     Statistic.CALF_STATISTIC
 )
 val BASIC_PARAMS_FOR_CREATE = listOf(
-    Statistic.BUST_STATISTIC,
     Statistic.ARM_STATISTIC,
+    Statistic.BUST_STATISTIC,
     Statistic.WAIST_STATISTIC,
     Statistic.BELLY_STATISTIC,
     Statistic.HIPS_STATISTIC,

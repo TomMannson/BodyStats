@@ -8,9 +8,12 @@ import com.tommannson.bodystats.base.BaseViewmodel
 import com.tommannson.bodystats.feature.configuration.ScreenState
 import com.tommannson.bodystats.infrastructure.ApplicationUser
 import com.tommannson.bodystats.infrastructure.SavedStats
-import com.tommannson.bodystats.infrastructure.configuration.*
+import com.tommannson.bodystats.infrastructure.configuration.StatsDao
+import com.tommannson.bodystats.infrastructure.configuration.UserDao
 import com.tommannson.bodystats.model.paramrecalculation.ProcessRecalculator
-import com.tommannson.bodystats.model.statistics.*
+import com.tommannson.bodystats.model.statistics.getStatFormatterModification
+import com.tommannson.bodystats.model.statistics.getStatShift
+import com.tommannson.bodystats.model.statistics.getStatUnit
 import com.tommannson.bodystats.utils.fmt
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +47,7 @@ class CreateStatsViewmodel
 
         viewModelScope.launch(Dispatchers.IO) {
             user = userDao.getAll().first()
-            val result = statsDao.getLastParams(1, paramsToMeasure)
+            val result = statsDao.getLastParams(user.id, paramsToMeasure)
             if (!result.isEmpty()) {
                 for (item in result) {
                     localValuesCopy[item.statName] = item.value
@@ -55,7 +58,8 @@ class CreateStatsViewmodel
                     viewStateMachine = ScreenState.DataLoaded,
                     valuesToSave = localValuesCopy,
                     orderOfItemsToSave = paramsToMeasure,
-                    invalidData = false
+                    invalidData = false,
+                    user = user
                 )
             )
         }
@@ -178,7 +182,8 @@ data class State(
     val valuesToSave: MutableMap<String, Float> = mutableMapOf(),
     val orderOfItemsToSave: List<String> = listOf(),
     val viewStateMachine: ScreenState = ScreenState.Init,
-    val invalidData: Boolean = true
+    val invalidData: Boolean = true,
+    val user: ApplicationUser? = null
 ) {
     val currentValue get() = valuesToSave[orderOfItemsToSave[selectedStep]]
     val currentValueText get() = currentValue fmt formatter

@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.tommannson.bodystats.feature.createstats.State
 import com.tommannson.bodystats.feature.createstats.model.Configuration
 import com.tommannson.bodystats.feature.createstats.model.Configurations
+import com.tommannson.bodystats.infrastructure.Gender
 import com.tommannson.bodystats.model.statistics.Statistic
 
 @Preview
@@ -33,7 +34,7 @@ fun StepInfo(
     val config = Configurations.PARAMS_UI_MAP
 
     Column {
-        Image(config[state!!.currentParamKey])
+        Image(config[state!!.currentParamKey], state.user?.sex ?: Gender.MALE)
         Name(config[state.currentParamKey]?.name ?: "NO_NAME")
     }
 }
@@ -56,7 +57,8 @@ private fun Name(
 
 @Composable
 private fun Image(
-    paramConfig: Configuration?
+    paramConfig: Configuration?,
+    genderInfo: Int
 ) {
     Box(
         modifier = Modifier
@@ -68,7 +70,7 @@ private fun Image(
                 modifier = Modifier
                     .align(Alignment.Center),
                 contentScale = ContentScale.FillWidth,
-                painter = painterResource(id = paramConfig.image),
+                painter = painterResource(id = paramConfig.genderImage(genderInfo)),
                 contentDescription = null,
             )
         }

@@ -9,8 +9,8 @@ class MeasureProgressCalculator {
 
     fun calculateDifference(groupedStats: MutableMap<String, MutableList<SavedStats>>): MeasurementsProgress {
         val statisiticsToCalculate = listOf(
-            Statistic.BUST_STATISTIC,
             Statistic.ARM_STATISTIC,
+            Statistic.BUST_STATISTIC,
             Statistic.WAIST_STATISTIC,
             Statistic.BELLY_STATISTIC,
             Statistic.HIPS_STATISTIC,

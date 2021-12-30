@@ -14,7 +14,7 @@ android {
         applicationId "com.tommannson.bodystats"
         minSdk 24
         targetSdk 31
-        versionCode 4
+        versionCode 6
         versionName "0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
