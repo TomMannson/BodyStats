@@ -11,7 +11,6 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneOffset
 
-//import com.tommannson.bodystats.infrastructure.notifications.DailyRemainderService;
 class AlarmCreator {
     fun setAlarm(context: Context, newTimeToSet: LocalDateTime, alarmRequestId: Int) {
         val instant = newTimeToSet.toInstant(OffsetDateTime.now().getOffset())
@@ -22,14 +21,18 @@ class AlarmCreator {
             context,
             alarmRequestId,
             i,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+            createFlagsForPendingIntent()
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setAlarmClock(AlarmManager.AlarmClockInfo(instant.toEpochMilli(), pi), pi)
-        } else {
-            am[AlarmManager.RTC_WAKEUP, instant.toEpochMilli()] = pi
-        }
+
+        am.setAlarmClock(AlarmManager.AlarmClockInfo(instant.toEpochMilli(), pi), pi)
     }
+
+    private fun createFlagsForPendingIntent() =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+        } else {
+            PendingIntent.FLAG_UPDATE_CURRENT
+        }
 
     fun cancelAlarm(context: Context, alarmRequestId: Int) {
         val intent = Intent(context, AlertPointerUpdater::class.java)
