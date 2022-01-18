@@ -25,6 +25,11 @@ fun NewBodyCompositionStats(
     onAddClicked: () -> Unit,
 ) {
     val paramsToPresent = BODY_COMPOSITION_PARAMS
+    val paddingOfTitle = remember { Modifier.padding(8.dp) }
+    val plusPainter = painterResource(id = R.drawable.ic_baseline_add_circle_24)
+
+    val downIconPainter =  painterResource(id = R.drawable.ic_baseline_keyboard_arrow_down_24)
+    val upIconPainter =  painterResource(id = R.drawable.ic_baseline_keyboard_arrow_up_24)
 
     Column() {
         Card(
@@ -35,14 +40,14 @@ fun NewBodyCompositionStats(
                 Row {
                     Text(
                         "Skład ciała",
-                        modifier = Modifier.padding(8.dp),
+                        modifier = paddingOfTitle,
                         style = MaterialTheme.typography.h5
                     )
                     Spacer(modifier = Modifier.weight(1.0f))
                     IconButton(onClick = onAddClicked) {
                         Icon(
                             modifier = Modifier.size(36.dp),
-                            painter = painterResource(id = R.drawable.ic_baseline_add_circle_24),
+                            painter = plusPainter,
                             tint = MaterialTheme.colors.primary, contentDescription = null
                         )
                     }
@@ -155,15 +160,15 @@ fun NewBodyCompositionStats(
                                     )
                                 }
 
-                                val icon = if (expandedStat == index) {
-                                    R.drawable.ic_baseline_keyboard_arrow_down_24
+                                val painter = if (expandedStat == index) {
+                                    downIconPainter
                                 } else {
-                                    R.drawable.ic_baseline_keyboard_arrow_up_24
+                                    upIconPainter
                                 }
 
                                 Icon(
                                     modifier = Modifier.weight(.05f),
-                                    painter = painterResource(id = icon),
+                                    painter = painter,
                                     tint = MaterialTheme.colors.primary,
                                     contentDescription = null
                                 )

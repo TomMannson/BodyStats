@@ -160,33 +160,14 @@ class ModelReminder
             now.with(WeekFields.of(Locale.getDefault()).getFirstDayOfWeek())
         var numberOfReminderToCreate = NUMBER_OF_REMINDERS_TO_CREATE
         val listOfDays = definition.days.split("_").map { it.toLong() }
-        val listOfReminders = mutableListOf<ReminderInstance>()
 
-        reminderCreator@ while (true) {
-            val startOfWeek = dayToAdd
-            for (dayOfWeek in listOfDays) {
-                dayToAdd = startOfWeek.plusDays(dayOfWeek-1)
-                val localDateTimeToAdd = LocalDateTime.of(dayToAdd, definition.timeOfReminder)
-                if (localDateTimeToAdd.isBefore(fullNow)) {
-                    continue
-                }
-
-                listOfReminders.add(
-                    ReminderInstance(
-                        fullNow,
-                        localDateTimeToAdd,
-                        definition.type,
-                        definition.id
-                    )
-                )
-                numberOfReminderToCreate--;
-                if (numberOfReminderToCreate == 0) {
-                    break@reminderCreator
-                }
-            }
-
-            dayToAdd = startOfWeek.plusWeeks(definition.timeBetweenReminders.toLong())
-        }
+        val listOfReminders = createListOfReminders(
+            dayToAdd,
+            listOfDays,
+            definition,
+            fullNow,
+            numberOfReminderToCreate
+        )
         try {
             if (listOfReminders.isNotEmpty()) {
                 reminderDao.createAll(listOfReminders)
@@ -194,6 +175,46 @@ class ModelReminder
         }catch (ex: Exception){
             ex.printStackTrace()
         }
+    }
+
+    fun createListOfReminders(
+        dayToAdd: LocalDate?,
+        listOfDays: List<Long>,
+        definition: ReminderDefinition,
+        fullNow: LocalDateTime,
+        numberOfReminderToCreate: Int
+    ): List<ReminderInstance> {
+        val listOfReminders = mutableListOf<ReminderInstance>()
+        var dayTimeToAdd = LocalDateTime.of(dayToAdd, definition.timeOfReminder)
+        var numberOfReminderToCreate1 = numberOfReminderToCreate
+
+        var hackValue = 1L;
+
+        reminderCreator@ while (true) {
+            val startOfWeek = dayTimeToAdd
+            for (dayOfWeek in listOfDays) {
+                dayTimeToAdd = startOfWeek?.plusDays(dayOfWeek - 1)
+                if (dayTimeToAdd.isBefore(fullNow)) {
+                    continue
+                }
+
+                listOfReminders.add(
+                    ReminderInstance(
+                        fullNow,
+                        dayTimeToAdd,
+                        definition.type,
+                        definition.id
+                    )
+                )
+                numberOfReminderToCreate1--;
+                if (numberOfReminderToCreate1 == 0) {
+                    break@reminderCreator
+                }
+            }
+
+            dayTimeToAdd = startOfWeek?.plusWeeks(definition.timeBetweenReminders.toLong())
+        }
+        return listOfReminders
     }
 
     companion object {

@@ -60,7 +60,6 @@ class AlertPointerUpdater : IntentService("AlertPointerUpdaterThread") {
 
         alarmCreator.cancelAlarm(this, ALARM_REMINDER_ID)
         if (result != null) {
-
             alarmCreator.setAlarm(this, result.reminderDayTime, ALARM_REMINDER_ID)
         }
         stopForeground(true)
@@ -90,21 +89,3 @@ class AlertPointerUpdater : IntentService("AlertPointerUpdaterThread") {
         }
     }
 }
-
-//class FetchAddressIntentService : JobIntentService() {
-//
-//    // This method is called when service starts instead of onHandleIntent
-//    override fun onHandleWork(intent: Intent) {
-//        onHandleIntent(intent)
-//    }
-//
-//    // remove override and make onHandleIntent private.
-//    private fun onHandleIntent(intent: Intent?) {}
-//
-//    // convenient method for starting the service.
-//    companion object {
-//        fun enqueueWork(context: Context, intent: Intent) {
-//            enqueueWork(context, FetchAddressIntentService::class.java, 1, intent)
-//        }
-//    }
-//}
