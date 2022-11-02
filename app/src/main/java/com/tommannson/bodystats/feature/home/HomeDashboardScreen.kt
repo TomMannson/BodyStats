@@ -4,9 +4,6 @@ import android.content.Context
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -14,14 +11,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.feature.MainActivity
-import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.home.sections.LoadedData
 import com.tommannson.bodystats.feature.home.sections.Loading
 import com.tommannson.bodystats.feature.home.sections.OnBoardSection
@@ -30,41 +22,58 @@ import com.tommannson.bodystats.model.statistics.FULL_LIST_OF_STATS
 
 
 @Composable
-fun HomeDashboardScreen(navController: NavController) {
+fun HomeDashboardScreen(
+    viewModel: HomeViewModel,
+    onUserInfoOpen: () -> Unit,
+    onSettingsOpen: () -> Unit,
+    onAddMeasurements: () -> Unit,
+    onShowMoreMeasurements: () -> Unit,
+    onAddComposition: () -> Unit,
+    onParamSelected: (String) -> Unit,
+    onSummarySelected: () -> Unit
+) {
     val scafoldState = rememberScaffoldState();
-    val viewmodel: HomeViewModel = hiltViewModel()
 
-    LaunchedEffect(key1 = viewmodel) {
-        viewmodel.initialiseData(FULL_LIST_OF_STATS)
+    LaunchedEffect(key1 = viewModel) {
+        viewModel.initialiseData(FULL_LIST_OF_STATS)
     }
 
-    val screen = LocalContext.current
-
-    val state by viewmodel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
+    state.toString()
 
     Scaffold(
-        topBar = {
-            TopBar(
-                onSettings = { navController.navigate(Screen.SettingsScreen.route) },
-            )
-        },
+        topBar = { TopBar(onSettings = onSettingsOpen) },
         scaffoldState = scafoldState
     ) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .fillMaxSize()
-                .padding(16.dp)
 
         ) {
             val localState = state
-            Crossfade(targetState = localState) {
-                when (it) {
-                    is HomeState.DataLoaded -> LoadedData(navController, it, viewmodel)
-                    is HomeState.NoData -> OnBoardSection(navController)
-                    else -> Loading()
+
+            if (localState is HomeState.Loading) {
+                Loading()
+            } else {
+                Crossfade(targetState = localState is HomeState.DataLoaded) { dataLoaded ->
+                    if (dataLoaded) {
+                        LoadedData(
+                            localState as HomeState.DataLoaded,
+                            viewModel,
+                            onUserInfoOpen,
+                            onAddMeasurement = onAddMeasurements,
+                            onAddComposition = onAddComposition,
+                            onShowMoreMeasurements = onShowMoreMeasurements,
+                            onSummarySelected = onSummarySelected,
+                            onParamSelected = onParamSelected
+                        )
+                    } else {
+                        OnBoardSection(onConfigurationOpen = onUserInfoOpen)
+                    }
                 }
             }
+
+
         }
     }
 }
@@ -78,5 +87,14 @@ fun openFilePicker(ctx: Context) {
 @Preview
 @Composable
 fun PreviewHome() {
-    HomeDashboardScreen(navController = rememberNavController())
+    HomeDashboardScreen(
+        viewModel = hiltViewModel(),
+        onUserInfoOpen = {},
+        onSettingsOpen = {},
+        onAddMeasurements = {},
+        onShowMoreMeasurements = {},
+        onAddComposition = {},
+        onSummarySelected = {},
+        onParamSelected = {}
+    )
 }

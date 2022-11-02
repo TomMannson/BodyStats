@@ -1,5 +1,7 @@
 package com.tommannson.bodystats.feature.reminders
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.app.AlarmManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tommannson.bodystats.R
@@ -19,6 +22,8 @@ import com.tommannson.bodystats.feature.MainActivity
 import com.tommannson.bodystats.feature.Screen
 import com.tommannson.bodystats.feature.configuration.widgets.TopBar
 import com.tommannson.bodystats.infrastructure.ReminderDefinition
+import com.tommannson.bodystats.infrastructure.notifications.AlertPointerUpdater
+import com.tommannson.bodystats.infrastructure.notifications.alarms.AlarmCreator
 import com.tommannson.bodystats.model.reminding.ReminderType
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -99,6 +104,12 @@ fun Settings(navController: NavController) {
                     )
                 }) {
                 Text("Export")
+            }
+            Button(onClick = {
+                AlarmCreator().cancelAlarm(context, AlertPointerUpdater.ALARM_REMINDER_ID
+                )
+            }) {
+
             }
         }
 

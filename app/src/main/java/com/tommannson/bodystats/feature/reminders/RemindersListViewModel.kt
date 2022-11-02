@@ -10,6 +10,7 @@ import com.tommannson.bodystats.infrastructure.ReminderInstance
 import com.tommannson.bodystats.infrastructure.configuration.ReminderDao
 import com.tommannson.bodystats.infrastructure.configuration.UserDao
 import com.tommannson.bodystats.infrastructure.notifications.AlertPointerUpdater
+import com.tommannson.bodystats.infrastructure.notifications.ReminderSchedulerJob
 import com.tommannson.bodystats.model.reminding.ReminderType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -114,10 +115,7 @@ class ModelReminder
             definition.id = id
         }
         refreshReminders(definition)
-        ContextCompat.startForegroundService(
-            BodyStatsApplication.app,
-            AlertPointerUpdater.starter(BodyStatsApplication.app)
-        )
+        ReminderSchedulerJob.startSchedule()
     }
 
     suspend fun toggle(reminderType: ReminderType) {
@@ -142,10 +140,7 @@ class ModelReminder
             definition.id = id
         }
         refreshReminders(definition)
-        ContextCompat.startForegroundService(
-            BodyStatsApplication.app,
-            AlertPointerUpdater.starter(BodyStatsApplication.app)
-        )
+        ReminderSchedulerJob.startSchedule()
     }
 
     fun refreshReminders(definition: ReminderDefinition) {
@@ -185,6 +180,7 @@ class ModelReminder
         numberOfReminderToCreate: Int
     ): List<ReminderInstance> {
         val listOfReminders = mutableListOf<ReminderInstance>()
+//        var dayTimeToAdd = LocalDateTime.of(dayToAdd, LocalTime.now().withSecond(0))
         var dayTimeToAdd = LocalDateTime.of(dayToAdd, definition.timeOfReminder)
         var numberOfReminderToCreate1 = numberOfReminderToCreate
 
@@ -194,6 +190,8 @@ class ModelReminder
             val startOfWeek = dayTimeToAdd
             for (dayOfWeek in listOfDays) {
                 dayTimeToAdd = startOfWeek?.plusDays(dayOfWeek - 1)
+//                dayTimeToAdd = startOfWeek?.plusHours(2)
+//                dayTimeToAdd = startOfWeek?.plusMinutes(2)
                 if (dayTimeToAdd.isBefore(fullNow)) {
                     continue
                 }

@@ -46,12 +46,12 @@ val listOfDates: List<LocalDate> = (0 until 5).map {
 
 @Composable
 fun MyCharts(
-    naviController: NavController,
     mapOfStats: Map<String, List<SavedStats>>,
     measurementsProgress: MeasurementsProgress,
     onAddClicked: () -> Unit,
     onMoreClicked: () -> Unit,
-
+    onParamSelected: (String) -> Unit,
+    onSummarySelected: () -> Unit
     ) {
 
     Card(
@@ -82,23 +82,17 @@ fun MyCharts(
                     SimplePieChart(
                         chartName = config?.name ?: "NO_NAME",
                         data = measurementsProgress,
-                        typeOfdata = item
-                    ) {
-                        naviController.navigate(Screen.PreviewSumaryScreen.route)
-                    }
+                        typeOfdata = item,
+                        onChartClicked = onSummarySelected
+                    )
                 } else {
-
                     SimpleLineChart(
                         chartName = config?.name ?: "NO_NAME",
                         data = mapOfStats[item] ?: listOf(),
-                        typeOfdata = item
-                    ) {
-                        naviController.navigate(Screen.PreviewScreen.routeWithParam(item))
-                    }
+                        typeOfdata = item,
+                        onChartClicked = { onParamSelected (item)}
+                    )
                 }
-
-
-
                 Divider()
             }
             TextButton(

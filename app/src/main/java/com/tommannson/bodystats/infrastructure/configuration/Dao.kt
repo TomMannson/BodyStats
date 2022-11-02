@@ -30,6 +30,8 @@ FROM applicationuser
     @Delete
     fun delete(user: ApplicationUser)
 
+    fun currentUser() = getAll().first()
+
 }
 
 @Dao
@@ -141,7 +143,7 @@ interface ReminderDao {
     fun findEnabledReminderInstancesByOwnerWhichWillTriggerAfter(
         owner: Long,
         greaterThen: LocalDateTime
-    ): List<ReminderInstance>
+    ): ReminderInstance?
 
     @Query(
         """SELECT r_i.id, r_i.reminder_day, r_i.reminder_id, r_i.reminder_type, r_i.created_at

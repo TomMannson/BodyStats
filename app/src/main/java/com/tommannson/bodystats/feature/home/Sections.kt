@@ -1,6 +1,8 @@
 package com.tommannson.bodystats.feature.home.sections
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,44 +34,52 @@ fun TopBar(
 }
 
 @Composable
-fun OnBoardSection(navController: NavController) {
+fun OnBoardSection(onConfigurationOpen: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.align(Alignment.Center)) {
-            Onboard(navController)
+            Onboard(onConfigurationOpen = onConfigurationOpen)
         }
     }
 }
 
 @Composable
 fun LoadedData(
-    navController: NavController,
     localState: HomeState.DataLoaded,
-    viewmodel: HomeViewModel
+    viewmodel: HomeViewModel,
+    onSettingsButtonClicked: () -> Unit,
+    onAddMeasurement: () -> Unit,
+    onShowMoreMeasurements: () -> Unit,
+    onAddComposition: () -> Unit,
+    onParamSelected: (String) -> Unit,
+    onSummarySelected: () -> Unit
 ) {
     Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
     ) {
-        UserInfo(navController, localState.currentUser, localState.weightInfo)
+        UserInfo(
+            localState.currentUser,
+            localState.weightInfo,
+            onSettingsButtonClicked = onSettingsButtonClicked
+        )
         UserWeightInfo(
             localState.weightInfo,
             viewmodel::increaseWeight,
             viewmodel::decreaseWeight
         )
         MyCharts(
-            navController,
             localState.mapOfStats,
             localState.progress,
-            onAddClicked = {
-                navController.navigate(Screen.CreateStatScreen.route)
-            },
-            onMoreClicked = {
-                navController.navigate(Screen.PreviewScreen.route)
-            })
+            onAddClicked = onAddMeasurement,
+            onMoreClicked = onShowMoreMeasurements,
+            onSummarySelected = onSummarySelected,
+            onParamSelected = onParamSelected
+            )
         Spacer(modifier = Modifier.height(16.dp))
         NewBodyCompositionStats(
             localState.mapOfStats,
-            onAddClicked = {
-                navController.navigate(Screen.CreateBodyCompositionScreen.route)
-            }
+            onAddClicked = onAddComposition
         )
     }
 

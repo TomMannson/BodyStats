@@ -28,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".infrastructure.notifications.AlertPointerUpdater" />
         <receiver
             android:name=".infrastructure.notifications.ServiceStarter"
             android:exported="true">
@@ -37,6 +36,9 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:exported="false"
+            android:name=".infrastructure.notifications.ReminderReceiver" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.tommannson.bodystats.R
-import com.tommannson.bodystats.feature.Screen
 
 val text = """Cześć,
 Na początek podaj kilka inforamcji o sobie żebyśmy mogli obliczać twoje postępy"""
@@ -22,14 +21,12 @@ Na początek podaj kilka inforamcji o sobie żebyśmy mogli obliczać twoje post
 @Preview
 @Composable
 fun PreviewOnboard() {
-    Onboard(rememberNavController())
+    Onboard(onConfigurationOpen = {})
 }
 
 @Composable
-fun Onboard(navController: NavController) {
-    PaddingCard(
-        onClick = { navController.navigate(Screen.ConfigurationScreen.route) }
-    ) {
+fun Onboard(onConfigurationOpen: () -> Unit) {
+    PaddingCard(onClick = onConfigurationOpen) {
         Text(text = text)
     }
 }

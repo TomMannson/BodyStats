@@ -26,7 +26,11 @@ import com.tommannson.bodystats.infrastructure.Gender
 import com.tommannson.bodystats.utils.fmt
 
 @Composable
-fun UserInfo(navController: NavController, currentUser: ApplicationUser, weightInfo: WeightInfo) {
+fun UserInfo(
+    currentUser: ApplicationUser,
+    weightInfo: WeightInfo,
+    onSettingsButtonClicked: () -> Unit
+    ) {
     Box(
         Modifier
             .fillMaxWidth()
@@ -80,11 +84,7 @@ fun UserInfo(navController: NavController, currentUser: ApplicationUser, weightI
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
-                        TextButton(onClick = {
-                            navController.navigate(Screen.ConfigurationScreen.route)
-
-
-                        }) {
+                        TextButton(onClick = onSettingsButtonClicked) {
                             Text("Ustaw swoje dane".uppercase())
                         }
                     }
@@ -106,8 +106,8 @@ fun UserInfo(navController: NavController, currentUser: ApplicationUser, weightI
 @Composable
 fun PreviewUserInfo() {
     UserInfo(
-        navController = rememberNavController(),
         currentUser = ApplicationUser("asd", 1.0f, 1.0f, 1f, Gender.FEMALE),
-        WeightInfo(1f, "")
+        WeightInfo(1f, ""),
+        onSettingsButtonClicked = {}
     )
 }

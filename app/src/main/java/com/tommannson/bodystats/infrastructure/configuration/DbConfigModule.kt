@@ -2,6 +2,7 @@ package com.tommannson.bodystats.infrastructure.configuration
 
 import android.app.Application
 import androidx.room.Room
+import com.tommannson.bodystats.infrastructure.logs.LogDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,6 +37,12 @@ object DbConfigModule {
     @Provides
     fun createReminderDao(db: AppDatabase): ReminderDao {
         return db.reminderDao()
+    }
+
+    @Singleton
+    @Provides
+    fun createLogDao(db: AppDatabase): LogDataSource {
+        return db.logDao()
     }
 
 }

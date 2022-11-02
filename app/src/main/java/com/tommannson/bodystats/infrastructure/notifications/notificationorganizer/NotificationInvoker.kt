@@ -101,13 +101,8 @@ class NotificationInvoker {
     }
 
 
-    private fun Context.createGroupName(s: String, s1: String) {
+    private fun Context.createGroupName(groupId: String, groupName: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val groupId = s
-// The user-visible name of the group.
-            val groupName = s1
-            val notificationManager =
-                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val service = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             service.createNotificationChannelGroup(NotificationChannelGroup(groupId, groupName))
         }

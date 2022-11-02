@@ -1,6 +1,7 @@
 package com.tommannson.bodystats.feature.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,7 +28,30 @@ fun Navigation(
         startDestination = startDestination
     ) {
         composable(Screen.HomeScreen.route) {
-            HomeDashboardScreen(navController)
+            HomeDashboardScreen(
+                hiltViewModel(),
+                onUserInfoOpen = {
+                    navController.navigate(Screen.ConfigurationScreen.route)
+                },
+                onSettingsOpen = {
+                    navController.navigate(Screen.SettingsScreen.route)
+                },
+                onAddMeasurements = {
+                    navController.navigate(Screen.CreateStatScreen.route)
+                },
+                onShowMoreMeasurements = {
+                    navController.navigate(Screen.PreviewScreen.route)
+                },
+                onAddComposition = {
+                    navController.navigate(Screen.CreateBodyCompositionScreen.route)
+                },
+                onSummarySelected = {
+                    navController.navigate(Screen.PreviewSumaryScreen.route)
+                } ,
+                onParamSelected = {
+                    navController.navigate(Screen.PreviewScreen.routeWithParam(it))
+                },
+            )
         }
         composable(Screen.ConfigurationScreen.route) {
             ConfigurationScreen(navController)

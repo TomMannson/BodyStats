@@ -61,6 +61,7 @@ private fun LoadingProgress() {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun LoadedContent(
     listToDisplay: List<String>,

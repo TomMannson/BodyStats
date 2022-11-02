@@ -18,4 +18,13 @@ object PendingIntentCompat {
             PendingIntent.getService(context, requestCode, intent!!, flags)
         }
     }
+
+    fun getBroadcast(
+        context: Context?,
+        requestCode: Int,
+        intent: Intent?,
+        flags: Int
+    ): PendingIntent {
+        return PendingIntent.getBroadcast(context, requestCode, intent!!, flags)
+    }
 }

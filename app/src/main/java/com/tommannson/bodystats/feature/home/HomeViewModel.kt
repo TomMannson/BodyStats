@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.threeten.bp.LocalDate
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -78,7 +79,7 @@ class HomeViewModel
                         loadedWeightInfo,
                         progress,
                     )
-                }.launchIn(viewModelScope)
+                }.launchIn(viewModelScope + Dispatchers.IO)
         }
     }
 
@@ -166,8 +167,6 @@ data class MeasurementsProgress(
 
     val summaryProgress: Float = partialProgress.values.sum()
     val valid = !partialProgress.isEmpty()
-
-
 }
 
 

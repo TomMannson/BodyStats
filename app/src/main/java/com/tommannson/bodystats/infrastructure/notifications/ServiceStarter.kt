@@ -13,10 +13,7 @@ import android.widget.Toast
  */
 class ServiceStarter : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        ContextCompat.startForegroundService(
-            context,
-            AlertPointerUpdater.starter(context)
-        )
+        ReminderSchedulerJob.startSchedule()
 //        DailyRemainderService.startScheduleDaily(context, true)
         Toast.makeText(context, "BodyStats started", Toast.LENGTH_SHORT).show()
     }
