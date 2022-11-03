@@ -1,6 +1,5 @@
 package com.tommannson.bodystats
 
-import com.jakewharton.threetenabp.AndroidThreeTen
 import org.junit.Test
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
@@ -9,7 +8,7 @@ import org.threeten.bp.ZoneId
 class DateConversion {
 
     @Test
-    fun test() {
+    fun `test datetimeConversion`() {
 
         val triggerTime = LocalDateTime.now()
         var zone = ZoneId.systemDefault();
@@ -17,7 +16,8 @@ class DateConversion {
         var instant = Instant.now();
 
         var offset = rules.getOffset(instant);
-        val time =  triggerTime.toEpochSecond(offset)
+        val cutMs = triggerTime.withNano(0)
+        val time =  cutMs.toEpochSecond(offset)
 
         zone = ZoneId.systemDefault();
         rules = zone.getRules()
@@ -26,5 +26,6 @@ class DateConversion {
 
         val restoredTime =  LocalDateTime.ofEpochSecond(time, 0, offset)
 
+        assert(cutMs == restoredTime)
     }
 }
